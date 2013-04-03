@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.iorga</groupId>
+	<artifactId>iraj</artifactId>
+	<name>Iorga REST Architecture for Java</name>
+	<packaging>jar</packaging>
+
+	<parent>
+		<groupId>com.iorga</groupId>
+		<artifactId>iraj-bom</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../iraj-bom/pom.xml</relativePath>
+	</parent>
+
+	<dependencies>
+		<!-- Compile -->
+		<dependency>
+			<groupId>com.mysema.querydsl</groupId>
+			<artifactId>querydsl-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.weld</groupId>
+			<artifactId>weld-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.weld</groupId>
+			<artifactId>weld-core</artifactId>
+		</dependency>
+		<!-- Runtime -->
+		<!-- Provided -->
+		<!-- Test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<!-- 
+			<plugin>
+				<artifactId>maven-site-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>make-site</id> <!- this is used for inheritance merges ->
+						<phase>package</phase> <!- bind to the packaging phase ->
+						<goals>
+							<goal>site</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			 -->
+		</plugins>
+	</build>
+</project>

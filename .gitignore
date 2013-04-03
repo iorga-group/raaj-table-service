@@ -1,0 +1,9 @@
+target
+bin
+.settings
+.project
+.classpath
+test-output
+*.jsfdia
+seam-blank-orm/src/main/resources/META-INF/persistence.xml
+seam-blank-web/src/main/webapp/WEB-INF/web.xml

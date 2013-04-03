@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>irajblank-ws</artifactId>
+	<name>IRAJ Blank - WebServices</name>
+	<parent>
+		<groupId>com.iorga</groupId>
+		<artifactId>irajblank-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../irajblank-parent/pom.xml</relativePath>
+	</parent>
+
+	<dependencies>
+		<!-- Compile -->
+		<dependency>
+			<groupId>com.iorga</groupId>
+			<artifactId>iraj</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.iorga</groupId>
+			<artifactId>irajblank-orm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.iorga</groupId>
+			<artifactId>irajblank-services</artifactId>
+		</dependency>
+		<!-- Provided -->
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<buildcommands>
+						<buildcommand>org.eclipse.jdt.core.javabuilder</buildcommand>
+						<buildcommand>org.eclipse.wst.common.project.facet.core.builder</buildcommand>
+						<buildcommand>org.jboss.tools.cdi.core.cdibuilder</buildcommand>
+						<buildcommand>org.eclipse.wst.validation.validationbuilder</buildcommand>
+					</buildcommands>
+					<additionalProjectnatures>
+						<projectnature>org.jboss.tools.cdi.core.cdinature</projectnature>
+					</additionalProjectnatures>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

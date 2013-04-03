@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>irajblank-web</artifactId>
+	<name>IRAJ Blank - Web</name>
+	<packaging>war</packaging>
+	<parent>
+		<groupId>com.iorga</groupId>
+		<artifactId>irajblank-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../irajblank-parent/pom.xml</relativePath>
+	</parent>
+	<dependencies>		
+		<!-- Provided -->
+
+		<!-- Runtime -->
+		<dependency>
+			<groupId>com.iorga</groupId>
+			<artifactId>irajblank-ws</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-filtered-resources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>src/main/resources</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/filtered-resources</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-filtered-webapp</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>src/main/webapp</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/filtered-webapp</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>src/main/resources</directory>
+							<includes>
+								<!-- <include>components.properties</include> -->
+								<include>messages.properties</include>
+							</includes>
+						</fileset>
+						<fileset>
+							<directory>src/main/webapp/WEB-INF</directory>
+							<includes>
+								<include>web.xml</include>
+								<include>.faces-config.xml.jsfdia</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<buildcommands>
+						<buildcommand>org.eclipse.jdt.core.javabuilder</buildcommand>
+						<buildcommand>org.eclipse.wst.common.project.facet.core.builder</buildcommand>
+						<buildcommand>org.jboss.tools.cdi.core.cdibuilder</buildcommand>
+						<buildcommand>org.jboss.tools.jst.web.kb.kbbuilder</buildcommand>
+						<buildcommand>org.eclipse.wst.validation.validationbuilder</buildcommand>
+					</buildcommands>
+					<!-- <additionalConfig> <file> <name>.settings/org.maven.ide.eclipse.prefs</name> 
+						<content> <![CDATA[eclipse.preferences.version=1 fullBuildGoals=process-test-resources 
+						includeModules=false resolveWorkspaceProjects=true resourceFilterGoals=process-resources 
+						resources\:testResources skipCompilerPlugin=true version=1]]> </content> 
+						</file> </additionalConfig> -->
+					<additionalProjectFacets>
+						<jst.jsf>2.0</jst.jsf>
+					</additionalProjectFacets>
+					<additionalProjectnatures>
+						<projectnature>org.jboss.tools.cdi.core.cdinature</projectnature>
+						<projectnature>org.jboss.tools.jsf.jsfnature</projectnature>
+						<projectnature>org.jboss.tools.jst.web.kb.kbnature</projectnature>
+					</additionalProjectnatures>
+					<packaging>war</packaging>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
