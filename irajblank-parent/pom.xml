@@ -14,6 +14,7 @@
 
 		<!-- artifact versions -->
 		<version.iraj>0.0.1-SNAPSHOT</version.iraj>
+		<version.resteasy>2.3.6.Final</version.resteasy>
 		<version.slf4j-log4j12>1.6.1</version.slf4j-log4j12>
 
 		<!-- IRAJ Blank properties -->
@@ -38,9 +39,6 @@
 
 	<modules>
 		<module>../iraj-bom</module>
-		<module>../irajblank-orm</module>
-		<module>../irajblank-services</module>
-		<module>../irajblank-ws</module>
 		<module>../irajblank-web</module>
 	</modules>
 
@@ -174,6 +172,13 @@ encoding/<project>=UTF-8]]>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
+			<dependency>
+				<groupId>org.jboss.resteasy</groupId>
+				<artifactId>resteasy-bom</artifactId>
+				<version>${version.resteasy}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 <!--
 			<dependency>
 				<groupId>com.mysema.querydsl</groupId>
@@ -220,6 +225,22 @@ encoding/<project>=UTF-8]]>
 				<version>${project.version}</version>
 				<type>jar</type>
 				<scope>compile</scope>
+			</dependency>
+			<!-- Runtime -->
+			<dependency>
+				<groupId>org.jboss.resteasy</groupId>
+				<artifactId>resteasy-cdi</artifactId>
+				<version>${version.resteasy}</version>
+				<type>jar</type>
+				<scope>runtime</scope>
+			</dependency>
+			<!-- Provided -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.0.1</version>
+				<type>jar</type>
+				<scope>provided</scope>
 			</dependency>
 
 		</dependencies>
