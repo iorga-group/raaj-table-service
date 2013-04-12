@@ -172,13 +172,6 @@ encoding/<project>=UTF-8]]>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
-			<dependency>
-				<groupId>org.jboss.resteasy</groupId>
-				<artifactId>resteasy-bom</artifactId>
-				<version>${version.resteasy}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
 <!--
 			<dependency>
 				<groupId>com.mysema.querydsl</groupId>

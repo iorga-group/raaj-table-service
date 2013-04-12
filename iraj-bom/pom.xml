@@ -25,6 +25,10 @@
 
 		<version.hibernate>4.2.0.Final</version.hibernate>
 		<version.flyway>2.1.1</version.flyway>
+
+		<version.resteasy>2.3.6.Final</version.resteasy>
+		<version.commons-lang>3.1</version.commons-lang>
+		<version.jackson>2.1.4</version.jackson>
 	</properties>
 
 
@@ -145,6 +149,13 @@ encoding/<project>=UTF-8]]>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
+			<dependency>
+				<groupId>org.jboss.resteasy</groupId>
+				<artifactId>resteasy-bom</artifactId>
+				<version>${version.resteasy}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 			
 			<!-- Compile -->
 			<dependency>
@@ -177,6 +188,16 @@ encoding/<project>=UTF-8]]>
 				<groupId>com.googlecode.flyway</groupId>
 				<artifactId>flyway-core</artifactId>
 				<version>${version.flyway}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${version.commons-lang}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${version.jackson}</version>
 			</dependency>
 			<!-- Runtime -->
 			<!-- Provided -->

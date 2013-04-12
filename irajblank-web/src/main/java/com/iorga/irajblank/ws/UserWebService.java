@@ -13,6 +13,10 @@ public class UserWebService {
 	@Inject
 	private UserService userService;
 
+	public static class FindForIdResult {
+
+	}
+
 	@GET
 	@Path("/find/{id}")
 	public User find(@PathParam("id") final Integer id) {
