@@ -414,7 +414,7 @@ public class JsonWriterTest {
 
 
 	@ContextParams(
-		@ContextParam(name = "simples", value = List.class, parameterizedArguments = DeepList.class)
+		@ContextParam(name = "simples", value = List.class, parameterizedArguments = Simple.class)
 	)
 	public static class DeepListMapTemplate {
 		private List<SimpleTemplate> simples;
@@ -427,5 +427,14 @@ public class JsonWriterTest {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		output.write(baos);
 		Assert.assertEquals("{\"simples\":[{\"field\":\"test\"},{\"field\":\"test2\"}]}", baos.toString());
+	}
+
+	@Test
+	public void testWriteListOfTemplate() throws WebApplicationException, IOException {
+		final List<Simple> context = Lists.newArrayList(new Simple("test"), new Simple("test2"));
+		final StreamingOutput output = new JsonWriter().writeIterableWithTemplate(SimpleTemplate.class, context);
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		output.write(baos);
+		Assert.assertEquals("[{\"field\":\"test\"},{\"field\":\"test2\"}]", baos.toString());
 	}
 }
