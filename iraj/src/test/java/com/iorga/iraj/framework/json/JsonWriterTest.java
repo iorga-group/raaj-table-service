@@ -412,7 +412,6 @@ public class JsonWriterTest {
 		Assert.assertEquals("{\"simples\":[{\"field\":\"test\"},{\"field\":\"test2\"}]}", baos.toString());
 	}
 
-
 	@ContextParams(
 		@ContextParam(name = "simples", value = List.class, parameterizedArguments = Simple.class)
 	)

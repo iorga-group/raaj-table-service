@@ -34,27 +34,6 @@ public class FieldTemplate extends PropertyTemplate<Field> {
 				propertyTemplate = new ClassTemplate(targetTypeToken.getRawType());
 			}
 		}
-
-//
-//		if (sourceType.equals(targetType)) {//TODO gérer ça directement avec le type paramétré de google puis par la suite vérifier que c'est un Iterable
-//			// Handle iterables : if the parameter type is equal, we can create directly an ObjectValueTemplate, else we must pass by an IterableTemplate
-//			if (targetTypeToken.getRawType().isAssignableFrom(Iterable.class)) {
-//				// We have an iterable on both side, let's check if we have the same item type
-//				if (targetTypeToken.isAssignableFrom(sourceTypeToken)) {
-//					// We have the same element types, we can let jackson handle it
-//					propertyTemplate = new ObjectValueTemplate();
-//				} else {
-//					// TODO : gérer les Iterables d'Iterables (donc faire un while ici)
-//					final TypeToken<?> itemTargetTypeToken = targetTypeToken.resolveType(Iterable.class.getTypeParameters()[0]);
-//					propertyTemplate = new IterableTemplate(new ClassTemplate(itemTargetTypeToken.getRawType()));
-//				}
-//			} else {
-//				propertyTemplate = new ObjectValueTemplate();
-//			}
-//		} else {
-//			// Different types, so we have another template to introspect
-//			propertyTemplate = new ClassTemplate((Class<?>)targetType);
-//		}
 	}
 
 	@Override
