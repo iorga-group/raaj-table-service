@@ -36,7 +36,6 @@ public class ClassTemplate implements Template {
 
 	@Override
 	public void writeJson(final OutputStream output, final Object context) throws IOException, WebApplicationException {
-		// TODO Auto-generated method stub
 		output.write('{');
 		boolean first = true;
 		for (final Template template : templatesToCall) {
