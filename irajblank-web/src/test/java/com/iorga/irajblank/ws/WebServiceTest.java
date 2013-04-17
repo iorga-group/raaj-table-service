@@ -127,7 +127,7 @@ public class WebServiceTest {
 
 
 	@JsonIgnoreProperties("field2")
-	public static class IgnoreBean {
+	public static class IgnoreMoreBean {
 		private String field;
 
 		public String getField() {
@@ -142,7 +142,7 @@ public class WebServiceTest {
 	public static class BeanPostMoreWebService {
 		@POST
 		@Path("/post")
-		public String post(final IgnoreBean bean) {
+		public String post(final IgnoreMoreBean bean) {
 			return bean.getField();
 		}
 	}
@@ -154,7 +154,46 @@ public class WebServiceTest {
 			.body(MediaType.APPLICATION_JSON_TYPE, "{\"field\":\"test\",\"field2\":\"test2\"}");
 		final ClientResponse<String> clientResponse = request.post(String.class);
 
-		Assert.assertEquals("test", clientResponse.getEntity());
 		Assert.assertEquals(200, clientResponse.getStatus());
+		Assert.assertEquals("test", clientResponse.getEntity());
+	}
+	
+
+	public static class IgnoreLessBean {
+		private String field;
+		private String field2;
+
+		public String getField() {
+			return field;
+		}
+		public void setField(final String field) {
+			this.field = field;
+		}
+		public String getField2() {
+			return field2;
+		}
+		public void setField2(String field2) {
+			this.field2 = field2;
+		}
+	}
+
+	@Path("/testbeanpostless")
+	public static class BeanPostLessWebService {
+		@POST
+		@Path("/post")
+		public String post(final IgnoreLessBean bean) {
+			return bean.getField();
+		}
+	}
+
+	@Test
+	public void testBeanPostLess() throws Exception {
+		final ClientRequest request = new ClientRequest(deploymentUrl.toString() + WEBSERVICE_PREFIX + "/testbeanpostless/post")
+			.header("Accept", MediaType.APPLICATION_JSON)
+			.body(MediaType.APPLICATION_JSON_TYPE, "{\"field\":\"test\"}");
+		final ClientResponse<String> clientResponse = request.post(String.class);
+
+		Assert.assertEquals(200, clientResponse.getStatus());
+		Assert.assertEquals("test", clientResponse.getEntity());
 	}
 }
