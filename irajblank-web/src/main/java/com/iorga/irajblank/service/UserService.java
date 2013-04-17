@@ -7,7 +7,7 @@ import javax.persistence.NonUniqueResultException;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import com.iorga.iraj.framework.service.JPAEntityService;
+import com.iorga.iraj.service.JPAEntityService;
 import com.iorga.irajblank.model.User;
 
 public class UserService extends JPAEntityService<User, Integer> {
