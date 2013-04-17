@@ -21,7 +21,11 @@ mvn install
 cd ../irajblank-parent
 mvn clean
 mvn eclipse:clean
+
 mvn -Dirajblank.release.commitId=`git describe --tags` eclipse:eclipse
+
+cd ../irajblank-web/
+mvn process-test-resources
 
 echo "End of script"
 read PAUSE

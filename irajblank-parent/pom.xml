@@ -16,6 +16,11 @@
 		<version.iraj>0.0.1-SNAPSHOT</version.iraj>
 		<version.resteasy>2.3.6.Final</version.resteasy>
 		<version.slf4j-log4j12>1.6.1</version.slf4j-log4j12>
+		<version.arquillian>1.0.0.Final</version.arquillian>
+		<version.arquillian-container-tomcat>1.0.0.CR4</version.arquillian-container-tomcat>
+		<version.tomcat-embedded>7.0.39</version.tomcat-embedded>
+		<version.commons-codec>1.7</version.commons-codec>
+		<version.commons-logging>1.1.2</version.commons-logging>
 
 		<!-- IRAJ Blank properties -->
 		<irajblank.debug>true</irajblank.debug>
@@ -97,6 +102,12 @@ encoding/<project>=UTF-8]]>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>2.6</version>
 				</plugin>
+				<!-- 
+				<plugin>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.7</version>
+				</plugin>
+				 -->
 				<plugin>
 					<groupId>com.mysema.maven</groupId>
 					<artifactId>apt-maven-plugin</artifactId>
@@ -172,6 +183,13 @@ encoding/<project>=UTF-8]]>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
+			<dependency>
+				<groupId>org.jboss.arquillian</groupId>
+				<artifactId>arquillian-bom</artifactId>
+				<version>${version.arquillian}</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
 <!--
 			<dependency>
 				<groupId>com.mysema.querydsl</groupId>
@@ -180,11 +198,13 @@ encoding/<project>=UTF-8]]>
 				<scope>provided</scope>
 			</dependency>
 -->
+<!-- 
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
 				<version>${version.slf4j-log4j12}</version>
 			</dependency>
+			-->
 			
 			<!-- <dependency> <groupId>org.jboss.spec</groupId> <artifactId>jboss-javaee-6.0</artifactId> 
 				<version>2.0.0.Final</version> <scope>provided</scope> <type>pom</type> </dependency> -->
@@ -219,6 +239,11 @@ encoding/<project>=UTF-8]]>
 				<type>jar</type>
 				<scope>compile</scope>
 			</dependency>
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>${version.commons-codec}</version>
+			</dependency>
 			<!-- Runtime -->
 			<dependency>
 				<groupId>org.jboss.resteasy</groupId>
@@ -235,7 +260,45 @@ encoding/<project>=UTF-8]]>
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>
-
+			<!-- Test -->
+			<dependency>
+				<groupId>org.jboss.arquillian.container</groupId>
+				<artifactId>arquillian-tomcat-embedded-7</artifactId>
+				<version>${version.arquillian-container-tomcat}</version>
+				<scope>test</scope>
+			</dependency>
+<!-- 			<dependency>
+				<groupId>org.jboss.arquillian.container</groupId>
+				<artifactId>arquillian-tomcat-common</artifactId>
+				<version>${version.arquillian-container-tomcat}</version>
+				<scope>test</scope>
+			</dependency> -->
+			<dependency>
+				<groupId>org.apache.tomcat.embed</groupId>
+				<artifactId>tomcat-embed-core</artifactId>
+				<version>${version.tomcat-embedded}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.tomcat.embed</groupId>
+				<artifactId>tomcat-embed-jasper</artifactId>
+				<version>${version.tomcat-embedded}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.tomcat.embed</groupId>
+				<artifactId>tomcat-embed-logging-juli</artifactId>
+				<version>${version.tomcat-embedded}</version>
+				<scope>test</scope>
+			</dependency>
+			<!-- 
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>${version.commons-logging}</version>
+				<scope>test</scope>
+			</dependency>
+			 -->
 		</dependencies>
 	</dependencyManagement>
 </project>

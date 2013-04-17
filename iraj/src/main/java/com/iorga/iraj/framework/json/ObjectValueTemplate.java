@@ -5,7 +5,8 @@ import java.io.OutputStream;
 
 import javax.ws.rs.WebApplicationException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.codehaus.jackson.map.ObjectMapper;
+
 
 public class ObjectValueTemplate implements Template {
 	private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();

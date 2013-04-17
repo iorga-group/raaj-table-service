@@ -28,7 +28,9 @@
 
 		<version.resteasy>2.3.6.Final</version.resteasy>
 		<version.commons-lang>3.1</version.commons-lang>
+		<!-- 
 		<version.jackson>2.1.4</version.jackson>
+		 -->
 	</properties>
 
 
@@ -194,11 +196,13 @@ encoding/<project>=UTF-8]]>
 				<artifactId>commons-lang3</artifactId>
 				<version>${version.commons-lang}</version>
 			</dependency>
+			<!-- 
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
 				<version>${version.jackson}</version>
 			</dependency>
+			 -->
 			<!-- Runtime -->
 			<!-- Provided -->
 			<dependency>
