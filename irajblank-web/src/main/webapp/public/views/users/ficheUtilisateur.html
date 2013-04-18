@@ -1,0 +1,29 @@
+<form class="form-horizontal" ng-submit="saveUser()">
+	<div class="control-group">
+		<label class="control-label" for="inputNom">Nom</label>
+		<div class="controls">
+			<input type="text" ng-model="userForm.nom">
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="inputPrenom">Prenom</label>
+		<div class="controls">
+			<input type="text" ng-model="userForm.prenom" placeholder="Password">
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="selectProfil">Profil</label>
+		<div class="controls">
+			<select ng-model="userForm.profilId" ng-options="profil.value as profil.text for profil in profilList">
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="controls">
+			<label class="checkbox"> <input type="checkbox" ng-model="userForm.active">
+				Actif
+			</label>
+		</div>
+	</div>
+	
+	<button type="submit" class="btn">Enregistrer</button>
+</form>

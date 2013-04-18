@@ -1,0 +1,14 @@
+<div class="pagination pagination-centered">
+   	<ul ng-show="paginator.currentPage > 3">
+   		<li ng-click="goToFirstPage()"><a href="#/user">&laquo;</a></li>
+   		<li ng-click="goToPreviousPage()"><a href="#/user">&lt;</a></li>
+   	</ul>
+    <ul>
+	    <li ng-class="{disabled:paginator.currentPage == num}" ng-repeat="num in numerosPage" ng-click="goToPage(num)"><a href="#/user">{{num}}</a></li>
+    </ul>
+    <ul ng-show="paginator.currentPage <= (paginator.nbPages-3)">
+    	<li ng-click="goToNextPage()"><a href="#/user">&gt;</a></li>
+    	<li ng-click="goToLastPage()"><a href="#/user">&raquo;</a></li>
+    </ul>
+	<!-- <select ng-model="paginator.pageSize" ng-options="size for size in pageSizeList"> -->
+</div>

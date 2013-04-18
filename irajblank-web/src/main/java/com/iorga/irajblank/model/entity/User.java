@@ -1,4 +1,4 @@
-package com.iorga.irajblank.model;
+package com.iorga.irajblank.model.entity;
 
 import java.io.Serializable;
 import java.security.Principal;

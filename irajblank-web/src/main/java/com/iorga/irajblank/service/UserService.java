@@ -1,14 +1,20 @@
 package com.iorga.irajblank.service;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import com.iorga.iraj.service.JPAEntityService;
-import com.iorga.irajblank.model.User;
+import com.iorga.iraj.framework.service.JPAEntityService;
+import com.iorga.irajblank.model.entity.QUser;
+import com.iorga.irajblank.model.entity.User;
+import com.iorga.irajblank.model.filter.UserFilter;
+import com.iorga.irajblank.ws.UserSearchTemplate;
+import com.mysema.query.jpa.HQLTemplates;
+import com.mysema.query.jpa.impl.JPAQuery;
 
 public class UserService extends JPAEntityService<User, Integer> {
 
@@ -74,4 +80,57 @@ public class UserService extends JPAEntityService<User, Integer> {
 			assert updatedUsers == users.size();
 		}
 	}
+
+	public UserSearchTemplate getUserSearchTemplate(UserFilter userFilter){
+		UserSearchTemplate userSearchTemplate = new UserSearchTemplate();
+		Long nbUser = this.countUser(userFilter);
+		List<User> listUser = this.searchUser(userFilter);
+
+		userSearchTemplate.setNbPages(Math.ceil((float)nbUser/5));
+		userSearchTemplate.setNbResults(nbUser);
+		userSearchTemplate.setListUser(listUser);
+
+		return userSearchTemplate;
+	}
+
+	public long countUser(UserFilter userFilter) {
+		final QUser qUser = QUser.user;
+
+		JPAQuery query = this.composeQuery(qUser, userFilter);
+
+		return query.count();
+	}
+
+	public List<User> searchUser(UserFilter userFilter) {
+
+		final QUser qUser = QUser.user;
+
+		//Tous les many-to-one et one-to-many sont en lazy load (chargé uniquement si on accède à la propriété)
+
+		JPAQuery query = this.composeQuery(qUser, userFilter);
+
+		query.offset((userFilter.getCurrentPage()-1)*5);
+		query.limit(10);
+		return query.list(qUser);
+	}
+
+	private JPAQuery composeQuery(QUser qUser, UserFilter userFilter){
+
+		final JPAQuery query = new JPAQuery(getEntityManager(), HQLTemplates.DEFAULT);
+
+		query.from(qUser);
+
+		if (userFilter.getNom() != null){
+			query.where(qUser.lastName.containsIgnoreCase(userFilter.getNom()));
+		}
+		if (userFilter.getProfilId() != null){
+			query.where(qUser.profile.id.eq(userFilter.getProfilId()));
+		}
+		if (userFilter.getLogin() != null){
+			query.where(qUser.lastName.containsIgnoreCase(userFilter.getLogin()));
+		}
+
+		return query;
+	}
+
 }

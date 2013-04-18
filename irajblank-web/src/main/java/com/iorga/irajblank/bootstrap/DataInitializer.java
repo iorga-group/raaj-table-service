@@ -11,8 +11,8 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import com.iorga.iraj.util.BeanManagerUtils;
-import com.iorga.irajblank.model.Profile;
-import com.iorga.irajblank.model.User;
+import com.iorga.irajblank.model.entity.Profile;
+import com.iorga.irajblank.model.entity.User;
 import com.iorga.irajblank.service.UserService;
 
 @WebListener

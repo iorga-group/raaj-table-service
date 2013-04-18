@@ -1,0 +1,13 @@
+a {
+  color: #00B7FF;
+}
+table thead{
+	color: white;
+	background-color: black; 
+}
+.pagination ul > .disabled > a, 
+	.pagination ul > .disabled > a:hover,
+	.pagination ul > .disabled > a:focus{
+	background-color: #999999;
+	color: white;
+}
