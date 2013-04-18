@@ -1,7 +1,12 @@
 package com.iorga.iraj.json;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,7 +23,6 @@ import com.google.common.collect.Lists;
 import com.iorga.iraj.annotation.ContextParam;
 import com.iorga.iraj.annotation.ContextParams;
 import com.iorga.iraj.annotation.ContextPath;
-import com.iorga.iraj.json.JsonWriter;
 
 @SuppressWarnings("unused")
 public class JsonWriterTest {
@@ -436,5 +440,14 @@ public class JsonWriterTest {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		output.write(baos);
 		Assert.assertEquals("[{\"field\":\"test\"},{\"field\":\"test2\"}]", baos.toString());
+	}
+
+	@Test
+	public void dontCloseStreamingOutput() throws WebApplicationException, IOException {
+		final Simple context = new Simple("test");
+		final StreamingOutput output = new JsonWriter().writeWithTemplate(SimpleTemplate.class, context);
+		final OutputStream outputStreamMock = mock(OutputStream.class);
+		output.write(outputStreamMock);
+		verify(outputStreamMock, never()).close();
 	}
 }

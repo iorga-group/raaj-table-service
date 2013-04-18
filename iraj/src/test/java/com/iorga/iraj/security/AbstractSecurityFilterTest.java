@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
@@ -35,7 +34,7 @@ import org.mockito.stubbing.Answer;
 import com.google.common.collect.Lists;
 
 public class AbstractSecurityFilterTest {
-	private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
+//	private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
 	public static class SecurityFilter extends AbstractSecurityFilter {
 		private final boolean handleDateShift;
