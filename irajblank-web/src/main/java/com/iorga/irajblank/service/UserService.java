@@ -8,7 +8,7 @@ import javax.persistence.NonUniqueResultException;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import com.iorga.iraj.framework.service.JPAEntityService;
+import com.iorga.iraj.service.JPAEntityService;
 import com.iorga.irajblank.model.entity.QUser;
 import com.iorga.irajblank.model.entity.User;
 import com.iorga.irajblank.model.filter.UserFilter;
@@ -34,7 +34,7 @@ public class UserService extends JPAEntityService<User, Integer> {
 	}
 
 	public String digestPassword(final String password) {
-		return password != null ? DigestUtils.shaHex(password) : null;	// En cas de null, DigestUtils envoie un NPE
+		return password != null ? DigestUtils.sha1Hex(password) : null;	// En cas de null, DigestUtils envoie un NPE
 	}
 
 	public User changeBlActi(final User user, final boolean activate) {
@@ -81,10 +81,10 @@ public class UserService extends JPAEntityService<User, Integer> {
 		}
 	}
 
-	public UserSearchTemplate getUserSearchTemplate(UserFilter userFilter){
-		UserSearchTemplate userSearchTemplate = new UserSearchTemplate();
-		Long nbUser = this.countUser(userFilter);
-		List<User> listUser = this.searchUser(userFilter);
+	public UserSearchTemplate getUserSearchTemplate(final UserFilter userFilter){
+		final UserSearchTemplate userSearchTemplate = new UserSearchTemplate();
+		final Long nbUser = this.countUser(userFilter);
+		final List<User> listUser = this.searchUser(userFilter);
 
 		userSearchTemplate.setNbPages(Math.ceil((float)nbUser/5));
 		userSearchTemplate.setNbResults(nbUser);
@@ -93,28 +93,28 @@ public class UserService extends JPAEntityService<User, Integer> {
 		return userSearchTemplate;
 	}
 
-	public long countUser(UserFilter userFilter) {
+	public long countUser(final UserFilter userFilter) {
 		final QUser qUser = QUser.user;
 
-		JPAQuery query = this.composeQuery(qUser, userFilter);
+		final JPAQuery query = this.composeQuery(qUser, userFilter);
 
 		return query.count();
 	}
 
-	public List<User> searchUser(UserFilter userFilter) {
+	public List<User> searchUser(final UserFilter userFilter) {
 
 		final QUser qUser = QUser.user;
 
 		//Tous les many-to-one et one-to-many sont en lazy load (chargé uniquement si on accède à la propriété)
 
-		JPAQuery query = this.composeQuery(qUser, userFilter);
+		final JPAQuery query = this.composeQuery(qUser, userFilter);
 
 		query.offset((userFilter.getCurrentPage()-1)*5);
 		query.limit(10);
 		return query.list(qUser);
 	}
 
-	private JPAQuery composeQuery(QUser qUser, UserFilter userFilter){
+	private JPAQuery composeQuery(final QUser qUser, final UserFilter userFilter){
 
 		final JPAQuery query = new JPAQuery(getEntityManager(), HQLTemplates.DEFAULT);
 
