@@ -2,13 +2,15 @@
 	<fieldset>
 		<legend>Recherche d'utilisateur</legend>
 		<label>Nom</label>
-		<input type="text" ng-model="userForm.userFilter.nom" placeholder="Type something…">
+		<input type="text" ng-model="userForm.nom" placeholder="Type something…">
 		
 		<label>Login</label>
-		<input type="text" ng-model="userForm.userFilter.login" placeholder="Type something…">
+		<input type="text" ng-model="userForm.login" placeholder="Type something…">
 		
-		<label>Profil</label>
-		<input type="text" ng-model="userForm.userFilter.profilId" placeholder="Type something…">
+		<label>Profile</label>
+		<select ng-model="userForm.profileId" ng-options="profile.id as profile.label for profile in profileList">
+			<option value="">Tous</option>
+		</select>
 		
 		<button type="submit" class="btn">Rechercher</button>
 	</fieldset>

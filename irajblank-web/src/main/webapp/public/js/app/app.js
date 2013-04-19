@@ -95,20 +95,41 @@ paginator.directive('paginator', function () {
           }
           
           scope.goToLastPage = function(){
-          	scope.paginator.currentPage = scope.paginator.nbPages;
-          	scope.$parent.$eval(scope.search);
-          	scope.majTabNumPage();
+        	  scope.paginator.currentPage = scope.paginator.nbPages;
+        	  scope.$parent.$eval(scope.search);
+        	  scope.majTabNumPage();
+          }
+
+          scope.goToFirstPage = function(){
+        	  scope.paginator.currentPage = 1;
+        	  scope.$parent.$eval(scope.search);
+        	  scope.majTabNumPage();
           }
           
-          scope.goToFirstPage = function(){
-          	scope.paginator.currentPage = 1;
-          	scope.$parent.$eval(scope.search);
-          	scope.majTabNumPage();
+          scope.showNextButtons = function(){
+        	  if (scope.paginator.nbPages <= scope.nbPageVisible){
+        		  return false;
+        	  }
+        	  if (scope.paginator.currentPage > 3){
+        		  return true;
+        	  }
+        	  return false;
+          }
+          
+          scope.showPreviousButtons = function(){
+        	  if (scope.paginator.nbPages <= scope.nbPageVisible){
+        		  return false;
+        	  }
+        	  if (scope.paginator.currentPage <= (scope.paginator.nbPages-3)){
+        		  return true;
+        	  }
+        	  return false;
           }
           
           scope.$watch('paginator.pageSize', function(newValue, oldValue) { 
             if (newValue != oldValue) {
-              scope.goToFirstPage();
+            	scope.paginator.pageSize = newValue;
+            	scope.goToFirstPage();
             }
           });
           

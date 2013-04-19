@@ -1,44 +1,85 @@
 package com.iorga.irajblank.ws;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.core.StreamingOutput;
 
+import com.iorga.iraj.annotation.ContextParam;
+import com.iorga.iraj.annotation.ContextParams;
+import com.iorga.iraj.json.JsonWriter;
+import com.iorga.irajblank.model.entity.Profile;
 import com.iorga.irajblank.model.entity.User;
-import com.iorga.irajblank.model.filter.UserFilter;
+import com.iorga.irajblank.model.service.UserSearchRequest;
+import com.iorga.irajblank.service.ProfileService;
 import com.iorga.irajblank.service.UserService;
 
-@Path("/user")
+@SuppressWarnings("unused")
+@Path("/searchUser")
 public class SearchUserWebService {
 	@Inject
 	private UserService userService;
 
-	@GET
-	@Path("/find/{id}")
-	@Produces("application/json")
-	public User find(@PathParam("id") final Integer id) {
-		return userService.find(id);
-	}
+	@Inject
+	private ProfileService profileService;
 
 	@GET
 	@Path("/findAll")
-	@Produces("application/json")
 	public List<User> findAll() {
 		return userService.findAll();
 	}
 
+	@ContextParam(Profile.class)
+	public static class ProfileResponseTemplate {
+		private Integer id;
+		private String label;
+	}
+
+
+	@ContextParams({
+		@ContextParam(name = "profileList", value = List.class, parameterizedArguments = Profile.class),
+		@ContextParam(name = "nbResults", value = Long.class)
+	})
+	public static class InitTemplate {
+		private List<ProfileTemplate> profileList;
+		private Long nbResults;
+
+		@ContextParam(Profile.class)
+		public static class ProfileTemplate {
+			private Integer id;
+			private String label;
+		}
+	}
+	@GET
+	@Path("/init")
+	public StreamingOutput init() {
+		List<Profile> profileList = profileService.findAll();
+		HashMap<String, Object> context = new HashMap<String, Object>();
+		context.put("profileList", profileList);
+		return new JsonWriter().writeWithTemplate(InitTemplate.class, context);
+	}
+
+	@ContextParam(UserSearchResults.class)
+	public static class SearchResponseTemplate {
+		private List<UserTemplate> listUser;
+		private Long nbResults;
+		private double nbPages;
+
+		@ContextParam(User.class)
+		public static class UserTemplate {
+			private Integer userId;
+			private String lastName;
+			private String firstName;
+		}
+	}
 	@POST
 	@Path("/search")
-	@Consumes("application/json")
-	@Produces("application/json")
-	public UserSearchTemplate search(UserFilter userFilter) {
-		UserSearchTemplate userSearchTemplate = userService.getUserSearchTemplate(userFilter);
-		return userSearchTemplate;
+	public StreamingOutput search(UserSearchRequest userFilter) {
+		UserSearchResults userSearchResults = userService.find(userFilter);
+		return new JsonWriter().writeWithTemplate(SearchResponseTemplate.class, userSearchResults);
 	}
 }
