@@ -140,11 +140,11 @@ public class SecurityUtils {
 		return StringUtils.chomp(signature);
 	}
 
-	public static String computeAuthenticationHeaderValue(final String accessKeyId, final String secretAccessKey, final HttpRequestToSign httpRequest) throws NoSuchAlgorithmException, InvalidKeyException, IOException, ParseException {
-		return computeAuthenticationHeaderValue(accessKeyId, secretAccessKey, computeData(httpRequest));
+	public static String computeAuthorizationHeaderValue(final String accessKeyId, final String secretAccessKey, final HttpRequestToSign httpRequest) throws NoSuchAlgorithmException, InvalidKeyException, IOException, ParseException {
+		return computeAuthorizationHeaderValue(accessKeyId, secretAccessKey, computeData(httpRequest));
 	}
 
-	public static String computeAuthenticationHeaderValue(final String accessKeyId, final String secretAccessKey, final String data) throws NoSuchAlgorithmException, InvalidKeyException {
+	public static String computeAuthorizationHeaderValue(final String accessKeyId, final String secretAccessKey, final String data) throws NoSuchAlgorithmException, InvalidKeyException {
 		return AUTHORIZATION_HEADER_VALUE_PREFIX+" "+accessKeyId+":"+computeDataSignature(secretAccessKey, data);
 	}
 
