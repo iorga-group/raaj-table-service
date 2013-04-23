@@ -8,8 +8,10 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.iorga.iraj.service.JPAEntityService;
+import com.iorga.iraj.util.QueryDSLUtils;
 import com.iorga.irajblank.model.entity.QUser;
 import com.iorga.irajblank.model.entity.User;
 import com.iorga.irajblank.model.service.UserSaveRequest;
@@ -113,6 +115,10 @@ public class UserService extends JPAEntityService<User, Integer> {
 		//Tous les many-to-one et one-to-many sont en lazy load (chargé uniquement si on accède à la propriété)
 
 		final JPAQuery query = this.composeQuery(qUser, userFilter);
+
+		if (StringUtils.isNotBlank(userFilter.getOrderByPath())) {
+			query.orderBy(QueryDSLUtils.parseOrderSpecifier(userFilter.getOrderByPath(), userFilter.getOrderByDirection(), qUser));
+		}
 
 		query.offset((userFilter.getCurrentPage()-1)*userFilter.getPageSize());
 		query.limit(userFilter.getPageSize());

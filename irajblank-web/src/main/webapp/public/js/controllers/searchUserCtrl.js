@@ -12,15 +12,14 @@ function SearchUserCtrl($scope, $http, $location) {
 	
 	$scope.userForm = {	
 			currentPage : 1,
-			pageSize : 10
+			pageSize : 10,
+			orderByPath : "",
+			orderByDirection : ""
 	};
 	
-	$scope.searchUser = function(newSearch){
-		$scope.userForm.pageSize = $scope.paginator.pageSize;
+	$scope.searchUser = function(newSearch){		
 		if (newSearch){
 			$scope.userForm.currentPage = 1;
-		}else{
-			$scope.userForm.currentPage = $scope.paginator.currentPage;
 		}
 		$http({
 		    url: 'api/searchUser/search',

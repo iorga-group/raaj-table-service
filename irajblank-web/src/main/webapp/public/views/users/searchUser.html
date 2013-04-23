@@ -20,14 +20,14 @@
     <fieldset>
     	<legend>Nombre d'utilisateurs : {{nbResults}}</legend>
     
-	    <div paginator search="searchUser()"></div>
+	    <div paginator searchform="userForm" searchmethod="searchUser()"></div>
 	    
 	    <table class="table table-bordered table-condensed table-hover">
 	    	<thead>
 		        <tr>
-		            <th>Id</th>
-		            <th>First Name</th>
-		            <th>Last Name</th>
+		            <th>Id </th>
+		            <th>First Name <span style="float:right" sortoncolumn="firstName" searchform="userForm" searchmethod="searchUser()"></span></th>
+		            <th>Last Name <span style="float:right" sortoncolumn="lastName" searchform="userForm" searchmethod="searchUser()"></span></th>
 		        </tr>
 		    </thead>
 		    <tbody ng-repeat="user in users">

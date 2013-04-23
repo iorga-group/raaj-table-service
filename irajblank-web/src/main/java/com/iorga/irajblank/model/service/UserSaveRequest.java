@@ -1,7 +1,7 @@
 package com.iorga.irajblank.model.service;
 
 
-public class UserSaveRequest extends PaginatedResquest {
+public class UserSaveRequest{
 
 	private Integer userId;
 	private String login;

@@ -1,7 +1,7 @@
 package com.iorga.irajblank.model.service;
 
 
-public class UserSearchRequest extends PaginatedResquest {
+public class UserSearchRequest extends PaginatedResquest{
 
 	private String nom;
 	private Integer profileId;
