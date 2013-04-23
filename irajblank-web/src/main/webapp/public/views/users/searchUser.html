@@ -2,13 +2,15 @@
 	<fieldset>
 		<legend>Recherche d'utilisateur</legend>
 		<label>Nom</label>
-		<input type="text" ng-model="userForm.userFilter.nom" placeholder="Type something…">
+		<input type="text" ng-model="userForm.nom" placeholder="Type something…">
 		
 		<label>Login</label>
-		<input type="text" ng-model="userForm.userFilter.login" placeholder="Type something…">
+		<input type="text" ng-model="userForm.login" placeholder="Type something…">
 		
-		<label>Profil</label>
-		<input type="text" ng-model="userForm.userFilter.profilId" placeholder="Type something…">
+		<label>Profile</label>
+		<select ng-model="userForm.profileId" ng-options="profile.id as profile.label for profile in profileList">
+			<option value="">Tous</option>
+		</select>
 		
 		<button type="submit" class="btn">Rechercher</button>
 	</fieldset>
@@ -18,14 +20,14 @@
     <fieldset>
     	<legend>Nombre d'utilisateurs : {{nbResults}}</legend>
     
-	    <div paginator search="searchUser()"></div>
+	    <div paginator searchform="userForm" searchmethod="searchUser()"></div>
 	    
 	    <table class="table table-bordered table-condensed table-hover">
 	    	<thead>
 		        <tr>
-		            <th>Id</th>
-		            <th>First Name</th>
-		            <th>Last Name</th>
+		            <th>Id </th>
+		            <th>First Name <span style="float:right" sortoncolumn="firstName" searchform="userForm" searchmethod="searchUser()"></span></th>
+		            <th>Last Name <span style="float:right" sortoncolumn="lastName" searchform="userForm" searchmethod="searchUser()"></span></th>
 		        </tr>
 		    </thead>
 		    <tbody ng-repeat="user in users">

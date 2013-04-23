@@ -24,7 +24,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-
 @NamedQueries({
 	@NamedQuery(
 		name = User.QUERY_ACTIVE_BY_LOGIN_AND_PASSWORD,

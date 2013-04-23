@@ -1,0 +1,44 @@
+<form class="form-horizontal" ng-submit="saveUserForm()">
+	<fieldset>
+		<legend ng-show="userForm.userId != 0">Modification d'utilisateur</legend>
+		<legend ng-show="userForm.userId == 0">Création d'utilisateur</legend>
+		<div class="control-group">
+			<label class="control-label" for="inputLogin">Login</label>
+			<div class="controls">
+				<input type="text" ng-model="userForm.login">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="inputPassword">Mot de passe</label>
+			<div class="controls">
+				<input type="text" ng-model="userForm.password">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="inputNom">Nom</label>
+			<div class="controls">
+				<input type="text" ng-model="userForm.nom">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="inputPrenom">Prenom</label>
+			<div class="controls">
+				<input type="text" ng-model="userForm.firstName">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="selectProfile">Profile</label>
+			<div class="controls">
+				<select ng-model="userForm.profileId" ng-options="profile.id as profile.label for profile in profileList"></select>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<label class="checkbox">
+					<input type="checkbox" ng-model="userForm.active"> Actif
+				</label>
+			</div>
+		</div>
+		<button type="submit" class="btn" style="float:right">Enregistrer</button>
+	</fieldset>
+</form>

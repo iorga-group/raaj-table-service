@@ -4,14 +4,11 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import com.iorga.irajblank.model.entity.User;
 
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-public class UserSearchTemplate {
+public class UserSearchResults {
 
 	private List<User> listUser;
 

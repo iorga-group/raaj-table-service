@@ -3,20 +3,27 @@ package com.iorga.irajblank.service;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.iorga.iraj.service.JPAEntityService;
+import com.iorga.iraj.util.QueryDSLUtils;
 import com.iorga.irajblank.model.entity.QUser;
 import com.iorga.irajblank.model.entity.User;
-import com.iorga.irajblank.model.filter.UserFilter;
-import com.iorga.irajblank.ws.UserSearchTemplate;
+import com.iorga.irajblank.model.service.UserSaveRequest;
+import com.iorga.irajblank.model.service.UserSearchRequest;
+import com.iorga.irajblank.ws.UserSearchResults;
 import com.mysema.query.jpa.HQLTemplates;
 import com.mysema.query.jpa.impl.JPAQuery;
 
 public class UserService extends JPAEntityService<User, Integer> {
+
+	@Inject
+	private ProfileService profileService;
 
 	public User findWithLoginAndPassword(final String login, final String password) {
 		final String digestedPassword = digestPassword(password);
@@ -81,19 +88,19 @@ public class UserService extends JPAEntityService<User, Integer> {
 		}
 	}
 
-	public UserSearchTemplate getUserSearchTemplate(final UserFilter userFilter){
-		final UserSearchTemplate userSearchTemplate = new UserSearchTemplate();
+	public UserSearchResults find(final UserSearchRequest userFilter){
+		final UserSearchResults userSearchResults = new UserSearchResults();
 		final Long nbUser = this.countUser(userFilter);
 		final List<User> listUser = this.searchUser(userFilter);
 
-		userSearchTemplate.setNbPages(Math.ceil((float)nbUser/5));
-		userSearchTemplate.setNbResults(nbUser);
-		userSearchTemplate.setListUser(listUser);
+		userSearchResults.setNbPages(Math.ceil((float)nbUser/userFilter.getPageSize()));
+		userSearchResults.setNbResults(nbUser);
+		userSearchResults.setListUser(listUser);
 
-		return userSearchTemplate;
+		return userSearchResults;
 	}
 
-	public long countUser(final UserFilter userFilter) {
+	public long countUser(final UserSearchRequest userFilter) {
 		final QUser qUser = QUser.user;
 
 		final JPAQuery query = this.composeQuery(qUser, userFilter);
@@ -101,7 +108,7 @@ public class UserService extends JPAEntityService<User, Integer> {
 		return query.count();
 	}
 
-	public List<User> searchUser(final UserFilter userFilter) {
+	public List<User> searchUser(final UserSearchRequest userFilter) {
 
 		final QUser qUser = QUser.user;
 
@@ -109,12 +116,16 @@ public class UserService extends JPAEntityService<User, Integer> {
 
 		final JPAQuery query = this.composeQuery(qUser, userFilter);
 
-		query.offset((userFilter.getCurrentPage()-1)*5);
-		query.limit(10);
+		if (StringUtils.isNotBlank(userFilter.getOrderByPath())) {
+			query.orderBy(QueryDSLUtils.parseOrderSpecifier(userFilter.getOrderByPath(), userFilter.getOrderByDirection(), qUser));
+		}
+
+		query.offset((userFilter.getCurrentPage()-1)*userFilter.getPageSize());
+		query.limit(userFilter.getPageSize());
 		return query.list(qUser);
 	}
 
-	private JPAQuery composeQuery(final QUser qUser, final UserFilter userFilter){
+	private JPAQuery composeQuery(final QUser qUser, final UserSearchRequest userFilter){
 
 		final JPAQuery query = new JPAQuery(getEntityManager(), HQLTemplates.DEFAULT);
 
@@ -123,14 +134,36 @@ public class UserService extends JPAEntityService<User, Integer> {
 		if (userFilter.getNom() != null){
 			query.where(qUser.lastName.containsIgnoreCase(userFilter.getNom()));
 		}
-		if (userFilter.getProfilId() != null){
-			query.where(qUser.profile.id.eq(userFilter.getProfilId()));
+		if (userFilter.getProfileId() != null){
+			query.where(qUser.profile.id.eq(userFilter.getProfileId()));
 		}
 		if (userFilter.getLogin() != null){
 			query.where(qUser.lastName.containsIgnoreCase(userFilter.getLogin()));
 		}
 
 		return query;
+	}
+
+	public Integer save(UserSaveRequest usar) {
+		User user = new User();
+		boolean newUser = true;
+		if (usar.getUserId() != 0) {
+			user = this.find(usar.getUserId());
+			newUser = false;
+		}
+
+		user.setLogin(usar.getLogin());
+		user.setPassword(usar.getPassword());
+		user.setLastName(usar.getNom());
+		user.setFirstName(usar.getFirstName());
+		user.setActive(usar.getActive());
+		user.setProfile(profileService.getReference(usar.getProfileId()));
+
+		if (newUser) {
+			this.create(user);
+		}
+
+		return user.getUserId();
 	}
 
 }

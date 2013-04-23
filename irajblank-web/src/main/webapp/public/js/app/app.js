@@ -1,4 +1,4 @@
-var module = angular.module('blank-iraj', ['$strap.directives', 'paginator'])
+var module = angular.module('blank-iraj', ['$strap.directives', 'paginator', 'sortoncolumn'])
 	.config(router);
 
 var paginator = angular.module('paginator', []);
@@ -6,7 +6,8 @@ paginator.directive('paginator', function () {
   return {
     priority: 0,
     restrict: 'A',
-    scope: {search: '@'},
+    scope: {searchform : '@',
+    		searchmethod : '@'},
     templateUrl: "public/module/paginator.html",
     replace: true,
     compile: function compile(tElement, tAttrs, transclude) {
@@ -57,7 +58,11 @@ paginator.directive('paginator', function () {
           scope.goToPage = function(numPage){
           	if (scope.paginator.currentPage != numPage){
       	    	scope.paginator.currentPage = numPage;
-      	    	scope.$parent.$eval(scope.search);
+      	    	
+      	    	//On met à jour la valeur currentPage du form concerné et on lance la recherche.
+      	    	scope.$parent.$eval(scope.searchform).currentPage = numPage;
+      	    	scope.$parent.$eval(scope.searchmethod);
+      	    	
       	    	scope.majTabNumPage();
           	}
           }
@@ -76,7 +81,11 @@ paginator.directive('paginator', function () {
           	}else{
           		scope.paginator.currentPage = scope.paginator.nbPages-2;
           	}
-          	scope.$parent.$eval(scope.search);
+          	
+          	//On met à jour la valeur currentPage du form concerné et on lance la recherche.
+  	    	scope.$parent.$eval(scope.searchform).currentPage = numPage;
+          	scope.$parent.$eval(scope.searchmethod);
+          	
           	scope.majTabNumPage();
           }
           
@@ -90,25 +99,55 @@ paginator.directive('paginator', function () {
           	}else{
           		scope.paginator.currentPage = 3;
           	}
-          	scope.$parent.$eval(scope.search);
+          	
+          	//On met à jour la valeur currentPage du form concerné et on lance la recherche.
+  	    	scope.$parent.$eval(scope.searchform).currentPage = scope.paginator.currentPage;
+          	scope.$parent.$eval(scope.searchmethod);
           	scope.majTabNumPage();
           }
           
           scope.goToLastPage = function(){
-          	scope.paginator.currentPage = scope.paginator.nbPages;
-          	scope.$parent.$eval(scope.search);
-          	scope.majTabNumPage();
+        	  scope.paginator.currentPage = scope.paginator.nbPages;
+        	  
+        	  //On met à jour la valeur currentPage du form concerné et on lance la recherche.
+        	  scope.$parent.$eval(scope.searchform).currentPage = scope.paginator.currentPage;
+        	  scope.$parent.$eval(scope.searchmethod);
+        	  scope.majTabNumPage();
+          }
+
+          scope.goToFirstPage = function(){
+        	  scope.paginator.currentPage = 1;
+        	  
+        	  //On met à jour la valeur currentPage du form concerné et on lance la recherche.
+        	  scope.$parent.$eval(scope.searchform).currentPage = scope.paginator.currentPage;
+        	  scope.$parent.$eval(scope.searchmethod);
+        	  scope.majTabNumPage();
           }
           
-          scope.goToFirstPage = function(){
-          	scope.paginator.currentPage = 1;
-          	scope.$parent.$eval(scope.search);
-          	scope.majTabNumPage();
+          scope.showNextButtons = function(){
+        	  if (scope.paginator.nbPages <= scope.nbPageVisible){
+        		  return false;
+        	  }
+        	  if (scope.paginator.currentPage > 3){
+        		  return true;
+        	  }
+        	  return false;
+          }
+          
+          scope.showPreviousButtons = function(){
+        	  if (scope.paginator.nbPages <= scope.nbPageVisible){
+        		  return false;
+        	  }
+        	  if (scope.paginator.currentPage <= (scope.paginator.nbPages-3)){
+        		  return true;
+        	  }
+        	  return false;
           }
           
           scope.$watch('paginator.pageSize', function(newValue, oldValue) { 
             if (newValue != oldValue) {
-              scope.goToFirstPage();
+            	scope.$parent.$eval(scope.searchform).pageSize = newValue;
+            	scope.goToFirstPage();
             }
           });
           
@@ -125,6 +164,32 @@ paginator.directive('paginator', function () {
           };
           
           scope.$parent.paginator = scope.paginator;
+        },
+        post: function postLink(scope, iElement, iAttrs, controller) {}
+      };
+    }
+  };
+});
+
+var sortoncolumn = angular.module('sortoncolumn', []);
+sortoncolumn.directive('sortoncolumn', function () {
+  return {
+    priority: 0,
+    restrict: 'A',
+    scope: {searchform: '@',
+    		searchmethod : '@',
+    		column : '@sortoncolumn'},
+    template: 	"<a href='' ng-click='searchByColumn(\"asc\")'><i class=\"icon-arrow-up\"></i></a>" +
+    			"<a href='' ng-click='searchByColumn(\"desc\")'><i class=\"icon-arrow-down\"></i></a>",
+    replace: false,
+    compile: function compile(tElement, tAttrs, transclude) {
+      return {
+        pre: function preLink(scope, iElement, iAttrs, controller) {
+        	scope.searchByColumn = function(directionParam){
+        		scope.$parent.$eval(scope.searchform).orderByPath = scope.column;
+        		scope.$parent.$eval(scope.searchform).orderByDirection = directionParam;
+           	  	scope.$parent.$eval(scope.searchmethod);
+            }
         },
         post: function postLink(scope, iElement, iAttrs, controller) {}
       };

@@ -1,5 +1,7 @@
 package com.iorga.iraj.transaction;
 
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
@@ -12,8 +14,12 @@ import com.iorga.iraj.annotation.ManualTransactional;
 public class ManualTransactionalInterceptor {
 	private static final ThreadLocal<Integer> nbCallTL = new ThreadLocal<Integer>();
 
+	@Inject
+	Instance<EntityManager> entityManagerInstance;
+
 	@AroundInvoke
-	public void interceptManualTrancational(final InvocationContext invocationContext, final EntityManager entityManager) throws Exception {
+	public Object interceptManualTrancational(final InvocationContext invocationContext) throws Exception {
+		final EntityManager entityManager = entityManagerInstance.get();
 		final Integer nbCall = nbCallTL.get();
 		if (nbCall == null) {
 			if (entityManager.getTransaction().isActive()) {
@@ -24,7 +30,7 @@ public class ManualTransactionalInterceptor {
 			nbCallTL.set(nbCall + 1);
 		}
 		try {
-			invocationContext.proceed();
+			return invocationContext.proceed();
 		} finally {
 			final Integer nbCall2 = nbCallTL.get();
 			if (nbCall == null) {
