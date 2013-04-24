@@ -1,5 +1,6 @@
 var module = angular.module('blank-iraj', ['$strap.directives', 'paginator', 'sortoncolumn'])
-	.config(router);
+	.config(router)
+	.config(securityInterceptor);
 
 var paginator = angular.module('paginator', []);
 paginator.directive('paginator', function () {

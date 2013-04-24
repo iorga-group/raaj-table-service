@@ -3,8 +3,6 @@ package com.iorga.iraj.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.iorga.irajblank.model.entity.QUser;
-
 public class QueryDSLUtilsTest {
 	@Test
 	public void parseOrderSpecifier() {

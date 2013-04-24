@@ -72,7 +72,7 @@ public class SecurityUtils {
 			if (log.isDebugEnabled()) {
 				log.debug("contentType = "+contentType);
 			}
-			dataBuilder.append(contentType);
+			dataBuilder.append(contentType.toLowerCase());
 		}
 		dataBuilder.append("\n");
 		/// Date

@@ -57,8 +57,8 @@ public class SearchUserWebService {
 	@GET
 	@Path("/init")
 	public StreamingOutput init() {
-		List<Profile> profileList = profileService.findAll();
-		HashMap<String, Object> context = new HashMap<String, Object>();
+		final List<Profile> profileList = profileService.findAll();
+		final HashMap<String, Object> context = new HashMap<String, Object>();
 		context.put("profileList", profileList);
 		return new JsonWriter().writeWithTemplate(InitTemplate.class, context);
 	}
@@ -78,8 +78,8 @@ public class SearchUserWebService {
 	}
 	@POST
 	@Path("/search")
-	public StreamingOutput search(UserSearchRequest userFilter) {
-		UserSearchResults userSearchResults = userService.find(userFilter);
+	public StreamingOutput search(final UserSearchRequest userFilter) {
+		final UserSearchResults userSearchResults = userService.search(userFilter);
 		return new JsonWriter().writeWithTemplate(SearchResponseTemplate.class, userSearchResults);
 	}
 }

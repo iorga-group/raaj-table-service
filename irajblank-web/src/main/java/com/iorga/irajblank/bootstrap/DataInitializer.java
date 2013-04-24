@@ -43,17 +43,17 @@ public class DataInitializer implements ServletContextListener {
 		final Profile userProfile = new Profile("User", "user");
 		entityManager.persist(userProfile);
 
-		final UserService userService = BeanManagerUtils.getOrCreateInstance(beanManager, UserService.class);
+//		final UserService userService = BeanManagerUtils.getOrCreateInstance(beanManager, UserService.class);
 
-		entityManager.persist(new User("user", userService.digestPassword("user"), "User", "user", userProfile));
-		entityManager.persist(new User("admin", userService.digestPassword("admin"), "Admin", "admin", adminProfile));
+		entityManager.persist(new User("user", UserService.digestPassword("user", "user"), "User", "user", userProfile));
+		entityManager.persist(new User("admin", UserService.digestPassword("admin", "admin"), "Admin", "admin", adminProfile));
 
 		for (int i = 1; i <= MAX_ORDER; i++) {
 			final Profile profile = new Profile("User"+i, "user"+i);
 			entityManager.persist(profile);
 			for (int j = 1; j <= MAX_ORDER; j++) {
 				final int id = i*MAX_ORDER + j;
-				entityManager.persist(new User("user"+id, userService.digestPassword("user"+id), "User"+id, "user"+id, profile));
+				entityManager.persist(new User("user"+id, UserService.digestPassword("user"+id, "user"+id), "User"+id, "user"+id, profile));
 			}
 		}
 

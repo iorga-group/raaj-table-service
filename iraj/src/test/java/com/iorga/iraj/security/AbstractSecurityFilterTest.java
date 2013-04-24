@@ -36,26 +36,26 @@ import com.google.common.collect.Lists;
 public class AbstractSecurityFilterTest {
 //	private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
-	public static class SecurityFilter extends AbstractSecurityFilter {
+	public static class SecurityFilter extends AbstractSecurityFilter<SimpleSecurityContext> {
 		private final boolean handleDateShift;
 		private final String accessKeyId;
-		private final String secretAccessKey;
+		private final SimpleSecurityContext simpleSecurityContext;
 
 		public SecurityFilter(final String accessKeyId, final String secretAccessKey, final boolean handleDateShift) {
 			this.accessKeyId = accessKeyId;
-			this.secretAccessKey = secretAccessKey;
+			this.simpleSecurityContext = new SimpleSecurityContext(secretAccessKey);
 			this.handleDateShift = handleDateShift;
 		}
 
 		@Override
-		protected boolean handleParsedDate(final Date parsedDate, final HttpServletResponse httpResponse) throws IOException {
-			return handleDateShift ? super.handleParsedDate(parsedDate, httpResponse) : true;
+		protected boolean handleParsedDate(final Date parsedDate, final SimpleSecurityContext simpleSecurityContext, final HttpServletRequest httpRequest, final HttpServletResponse httpResponse) throws IOException {
+			return handleDateShift ? super.handleParsedDate(parsedDate, simpleSecurityContext, httpRequest, httpResponse) : true;
 		}
 
 		@Override
-		protected String findSecretAccesKey(final String accessKeyId) {
+		protected SimpleSecurityContext findSecurityContext(final String accessKeyId) {
 			Assert.assertEquals(this.accessKeyId, accessKeyId);
-			return secretAccessKey;
+			return simpleSecurityContext;
 		}
 	}
 

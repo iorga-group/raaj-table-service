@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  * Security filter (for example for webservices), based on http://docs.amazonwebservices.com/AmazonS3/latest/dev/RESTAuthentication.html and
  * http://docs.amazonwebservices.com/AmazonCloudFront/latest/DeveloperGuide/RESTAuthentication.html
  */
-public abstract class AbstractSecurityFilter implements Filter {
+public abstract class AbstractSecurityFilter<S extends SecurityContext> implements Filter {
 
 	private static final Logger log = LoggerFactory.getLogger(AbstractSecurityFilter.class);
 
@@ -59,22 +59,27 @@ public abstract class AbstractSecurityFilter implements Filter {
 					date = additionalDate;
 				}
 				try {
-					if (handleParsedDate(DateUtil.parseDate(date), httpResponse)) {
-						// Let's process the signature in order to compare it
-						final String secretAccessKey = findSecretAccesKey(accessKeyId);
-						try {
-							final MultiReadHttpServletRequest multiReadHttpRequest = new MultiReadHttpServletRequest(httpRequest);
-							final String serverSignature = SecurityUtils.computeSignature(secretAccessKey, new HttpServletRequestToSign(multiReadHttpRequest));
-							if (serverSignature.equalsIgnoreCase(signature)) {
-								doFilterWhenSecurityOK(httpRequest, httpResponse, chain, multiReadHttpRequest, accessKeyId);
-							} else {
-								sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unvalid signature", httpResponse, "Got "+signature+", was expecting "+serverSignature);
+					final S securityContext = findSecurityContext(accessKeyId);
+					if (securityContext != null) {
+						if (handleParsedDate(DateUtil.parseDate(date), securityContext, httpRequest, httpResponse)) {
+							// Let's process the signature in order to compare it
+							final String secretAccessKey = securityContext.getSecretAccessKey();
+							try {
+								final MultiReadHttpServletRequest multiReadHttpRequest = new MultiReadHttpServletRequest(httpRequest);
+								final String serverSignature = SecurityUtils.computeSignature(secretAccessKey, new HttpServletRequestToSign(multiReadHttpRequest));
+								if (serverSignature.equalsIgnoreCase(signature)) {
+									doFilterWhenSecurityOK(httpRequest, httpResponse, chain, multiReadHttpRequest, accessKeyId);
+								} else {
+									sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unvalid signature", httpResponse, "Got "+signature+", was expecting "+serverSignature);
+								}
+							} catch (final NoSuchAlgorithmException e) {
+								throw new ServletException(e);
+							} catch (final InvalidKeyException e) {
+								sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid key", httpResponse, e);
 							}
-						} catch (final NoSuchAlgorithmException e) {
-							throw new ServletException(e);
-						} catch (final InvalidKeyException e) {
-							sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid key", httpResponse, e);
 						}
+					} else {
+						sendError(HttpServletResponse.SC_UNAUTHORIZED, "AccessKeyId unknown or invalid", httpResponse, "Couldn't find SecurityContext for "+accessKeyId);
 					}
 				} catch (final ParseException e) {
 					sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid date", httpResponse, "Have to parse '"+date+"'", e);
@@ -85,12 +90,19 @@ public abstract class AbstractSecurityFilter implements Filter {
 		}
 	}
 
+	/**
+	 * @param accessKeyId
+	 * @return the {@link SecurityContext} for the given <code>accessKeyId</code>, <code>null</code> if not
+	 * found or the accessKeyId is invalid
+	 */
+	protected abstract S findSecurityContext(String accessKeyId);
+
 	protected void doFilterWhenSecurityOK(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse, final FilterChain chain, final MultiReadHttpServletRequest multiReadHttpRequest, final String accessKeyId) throws IOException, ServletException {
 		// By default, security OK, forward to next filter
 		chain.doFilter(multiReadHttpRequest, httpResponse);
 	}
 
-	protected boolean handleParsedDate(final Date parsedDate, final HttpServletResponse httpResponse) throws IOException {
+	protected boolean handleParsedDate(final Date parsedDate, final S securityContext, final HttpServletRequest httpRequest, final HttpServletResponse httpResponse) throws IOException {
 		final Date localDate = new Date();
 		// By default, we check that the time shifting is less than 15mn
 		if (Math.abs(parsedDate.getTime() - localDate.getTime()) > 15 * 60 * 1000) {
@@ -100,8 +112,6 @@ public abstract class AbstractSecurityFilter implements Filter {
 			return true;
 		}
 	}
-
-	protected abstract String findSecretAccesKey(final String accessKeyId);
 
 	protected static void sendError(final int sc, final String message, final HttpServletResponse resp) throws IOException {
 		sendError(sc, message, resp, null, null);

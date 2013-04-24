@@ -26,7 +26,7 @@ public class UserService extends JPAEntityService<User, Integer> {
 	private ProfileService profileService;
 
 	public User findWithLoginAndPassword(final String login, final String password) {
-		final String digestedPassword = digestPassword(password);
+		final String digestedPassword = digestPassword(login, password);
 
 		try {
 			return getEntityManager().createNamedQuery(User.QUERY_ACTIVE_BY_LOGIN_AND_PASSWORD, User.class)
@@ -40,8 +40,8 @@ public class UserService extends JPAEntityService<User, Integer> {
 		}
 	}
 
-	public String digestPassword(final String password) {
-		return password != null ? DigestUtils.sha1Hex(password) : null;	// En cas de null, DigestUtils envoie un NPE
+	public static String digestPassword(final String login, final String clearPassword) {
+		return clearPassword != null ? DigestUtils.sha1Hex(login+"|"+clearPassword) : null;	// En cas de null, DigestUtils envoie un NPE
 	}
 
 	public User changeBlActi(final User user, final boolean activate) {
@@ -58,12 +58,12 @@ public class UserService extends JPAEntityService<User, Integer> {
 	}
 
 	public void create(final User user, final String clearPassword) {
-		user.setPassword(digestPassword(clearPassword));
+		user.setPassword(digestPassword(user.getLogin(), clearPassword));
 		create(user);
 	}
 
 	public void update(final User user, final String clearPassword) {
-		user.setPassword(digestPassword(clearPassword));
+		user.setPassword(digestPassword(user.getLogin(), clearPassword));
 		update(user);
 	}
 
@@ -88,10 +88,10 @@ public class UserService extends JPAEntityService<User, Integer> {
 		}
 	}
 
-	public UserSearchResults find(final UserSearchRequest userFilter){
+	public UserSearchResults search(final UserSearchRequest userFilter){
 		final UserSearchResults userSearchResults = new UserSearchResults();
 		final Long nbUser = this.countUser(userFilter);
-		final List<User> listUser = this.searchUser(userFilter);
+		final List<User> listUser = this.find(userFilter);
 
 		userSearchResults.setNbPages(Math.ceil((float)nbUser/userFilter.getPageSize()));
 		userSearchResults.setNbResults(nbUser);
@@ -108,7 +108,7 @@ public class UserService extends JPAEntityService<User, Integer> {
 		return query.count();
 	}
 
-	public List<User> searchUser(final UserSearchRequest userFilter) {
+	public List<User> find(final UserSearchRequest userFilter) {
 
 		final QUser qUser = QUser.user;
 
@@ -144,7 +144,7 @@ public class UserService extends JPAEntityService<User, Integer> {
 		return query;
 	}
 
-	public Integer save(UserSaveRequest usar) {
+	public Integer save(final UserSaveRequest usar) {
 		User user = new User();
 		boolean newUser = true;
 		if (usar.getUserId() != 0) {
@@ -164,6 +164,12 @@ public class UserService extends JPAEntityService<User, Integer> {
 		}
 
 		return user.getUserId();
+	}
+
+	public String findPasswordForLogin(final String login) throws NoResultException, NonUniqueResultException {
+		return (String) getEntityManager().createNamedQuery(User.GET_PASSWORD_FOR_LOGIN)
+			.setParameter("login", login)
+			.getSingleResult();
 	}
 
 }

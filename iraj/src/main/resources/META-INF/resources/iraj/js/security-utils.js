@@ -1,4 +1,4 @@
-// Dependencies : CryptoJS.MD5 (rollups/md5.js), CryptoJS.HmacSHA1 (rollups/hmac-sha1.js), CryptoJS.enc.Base64 (components/enc-base64-min.js)
+// Dependencies : CryptoJS.MD5 (rollups/md5.js), CryptoJS.SHA1 (rollups/sha1.js), CryptoJS.HmacSHA1 (rollups/hmac-sha1.js), CryptoJS.enc.Base64 (components/enc-base64-min.js)
 
 securityUtils = {
 	/*
@@ -24,13 +24,13 @@ securityUtils = {
 		data += '\n';
 		// Content type
 		if (httpRequestToSign.headers['Content-Type'] && httpRequestToSign.headers['Content-Type'].length > 0) {
-			data += httpRequestToSign.headers['Content-Type'];
+			data += httpRequestToSign.headers['Content-Type'].toLowerCase();
 		}
 		data += '\n';
 		/// Date
-		var date = httpRequestToSign.headers['Date'];
+		var date = httpRequestToSign.headers['Date'], xirajdate;
 		if (httpRequestToSign.headers['X-IRAJ-Date'] && httpRequestToSign.headers['X-IRAJ-Date'].length > 0) {
-			var xirajdate = httpRequestToSign.headers['X-IRAJ-Date'];
+			xirajdate = httpRequestToSign.headers['X-IRAJ-Date'];
 			date = xirajdate;
 		}
 		data += date + '\n';
@@ -50,6 +50,12 @@ securityUtils = {
 		return 'IWS ' + accessKeyId + ':' + securityUtils.computeDataSignature(secretAccessKey, securityUtils.computeData(httpRequestToSign));
 	},
 	addAuthorizationHeader: function(accessKeyId, secretAccessKey, httpRequestToSign) {
+		if (!httpRequestToSign.headers['X-IRAJ-Date'] && !httpRequestToSign.headers['Date']) {
+			httpRequestToSign.headers['X-IRAJ-Date'] = new Date().toUTCString();
+		}
 		httpRequestToSign.headers['Authorization'] = securityUtils.computeAuthorizationHeaderValue(accessKeyId, secretAccessKey, httpRequestToSign);
+	},
+	digestPassword: function(login, clearPassword) {
+		return CryptoJS.SHA1(login+'|'+clearPassword).toString(CryptoJS.enc.Hex);
 	}
 }

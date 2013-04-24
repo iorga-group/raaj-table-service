@@ -1,4 +1,4 @@
-package com.iorga.irajblank.model.entity;
+package com.iorga.iraj.util;
 
 import java.io.Serializable;
 import java.security.Principal;
@@ -18,8 +18,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @NamedQueries({
 	@NamedQuery(
@@ -32,7 +30,7 @@ import javax.validation.constraints.Size;
 		name = User.UPDATE_SET_ACTIVE_FOR_USERS,
 		query = "update User user set user.active = :active where user in (:users)"),
 	@NamedQuery(
-		name = User.GET_PASSWORD_FOR_LOGIN,
+		name = User.GET_PASSWORD_WITH_LOGIN,
 		query = "select password from User where login = :login"),
 })
 @Entity
@@ -43,7 +41,7 @@ public class User implements Serializable, Principal {
 	public static final String QUERY_ACTIVE_BY_LOGIN_AND_PASSWORD = "User.QUERY_ACTIVE_BY_LOGIN_AND_PASSWORD";
 	public static final String EXISTS_WITH_LOGIN = "User.EXISTS_WITH_LOGIN";
 	public static final String UPDATE_SET_ACTIVE_FOR_USERS = "User.UPDATE_SET_ACTIVE_FOR_USERS";
-	public static final String GET_PASSWORD_FOR_LOGIN = "User.GET_PASSWORD_FOR_LOGIN";
+	public static final String GET_PASSWORD_WITH_LOGIN = "User.GET_PASSWORD_WITH_LOGIN";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,31 +55,21 @@ public class User implements Serializable, Principal {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_PROF", nullable = false)
-	@NotNull
 	private Profile profile;
 
 	@Column(name = "LB_LOGI", nullable = false, length = 20)
-	@NotNull
-	@Size(max = 20)
 	private String login;
 
 	@Column(name = "LB_PASS", nullable = false, length = 100)
-	@NotNull
-	@Size(max = 100)
 	private String password;
 
 	@Column(name = "LB_LAST_NAME", nullable = false, length = 50)
-	@NotNull
-	@Size(max = 50)
 	private String lastName;
 
 	@Column(name = "LB_FIRS_NAME", nullable = false, length = 50)
-	@NotNull
-	@Size(max = 50)
 	private String firstName;
 
 	@Column(name = "BL_ACTI", nullable = false)
-	@NotNull
 	private Boolean active;
 
 	@Temporal(TemporalType.DATE)
