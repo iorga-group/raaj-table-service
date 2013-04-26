@@ -54,8 +54,5 @@ securityUtils = {
 			httpRequestToSign.headers['X-IRAJ-Date'] = new Date().toUTCString();
 		}
 		httpRequestToSign.headers['Authorization'] = securityUtils.computeAuthorizationHeaderValue(accessKeyId, secretAccessKey, httpRequestToSign);
-	},
-	digestPassword: function(login, clearPassword) {
-		return CryptoJS.SHA1(login+'|'+clearPassword).toString(CryptoJS.enc.Hex);
 	}
 }
