@@ -1,5 +1,5 @@
-// based on https://github.com/witoldsz/angular-http-auth/blob/master/src/http-auth-interceptor.js
 'use strict';
+// based on https://github.com/witoldsz/angular-http-auth/blob/master/src/http-auth-interceptor.js
 
 angular.module('security-interceptor', [])
 	.factory('authService', function($injector, $rootScope) {
@@ -40,7 +40,10 @@ angular.module('security-interceptor', [])
 				}
 			},
 			addAuthorizationHeader: function(config) {
-				securityUtils.addAuthorizationHeader(authObject.login, authObject.digestedPassword, { //FIXME intercept & redirect to login form + call /security/getTime in order to save the time shifting
+				// Adding the date header considering the time shifting
+				config.headers['X-IRAJ-Date'] = new Date(new Date().getTime() - authObject.timeShifting).toUTCString();
+				
+				securityUtils.addAuthorizationHeader(authObject.login, authObject.digestedPassword, {
 					method: config.method,
 					body: config.transformRequest[0](config.data),
 					headers: config.headers,
@@ -61,7 +64,6 @@ angular.module('security-interceptor', [])
 		$httpProvider.interceptors.push(function($q, $rootScope, authService) {
 			return {
 				'request': function(config) {
-					//$log.info(config);
 					if (config.url.indexOf('api/') == 0) {
 						if (!authService.authenticated && !config.authenticating) {
 							var deferred = $q.defer();
