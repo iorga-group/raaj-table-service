@@ -1,4 +1,4 @@
-var module = angular.module('blank-iraj', ['$strap.directives', 'paginator', 'sortoncolumn', 'security-interceptor'])
+var module = angular.module('blank-iraj', ['$strap.directives', 'paginator', 'sortoncolumn', 'iraj-authentication-service', 'iraj-security-interceptor'])
 	.config(router);
 //	.config(securityInterceptor);
 
