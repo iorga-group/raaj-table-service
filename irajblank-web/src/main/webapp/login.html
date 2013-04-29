@@ -1,10 +1,10 @@
-<div id="loginModal" class="modal hide fade" data-backdrop="static">
+<div id="loginModal" class="modal hide fade" data-backdrop="static" data-keyboard="false" tabindex="-1">
 	<form ng-submit="tryLogin(login, password)">
 		<div class="modal-header">
 			<h3>Authentication</h3>
 		</div>
 		<div class="modal-body">
-			<p><input type="text" ng-model="login" placeholder="Login"></p>
+			<p><input id="loginModalLogin" name="loginModalLogin" type="text" ng-model="login" placeholder="Login"></p>
 			<p><input type="password" ng-model="password" placeholder="Password"></p>
 		</div>
 		<div class="modal-footer">
