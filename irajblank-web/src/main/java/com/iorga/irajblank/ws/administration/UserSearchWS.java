@@ -1,8 +1,9 @@
-package com.iorga.irajblank.ws;
+package com.iorga.irajblank.ws.administration;
 
 import java.util.HashMap;
 import java.util.List;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -15,17 +16,22 @@ import com.iorga.iraj.json.JsonWriter;
 import com.iorga.irajblank.model.entity.Profile;
 import com.iorga.irajblank.model.entity.User;
 import com.iorga.irajblank.model.service.UserSearchRequest;
+import com.iorga.irajblank.model.service.UserSearchResponse;
 import com.iorga.irajblank.service.ProfileService;
 import com.iorga.irajblank.service.UserService;
 
 @SuppressWarnings("unused")
-@Path("/searchUser")
-public class SearchUserWebService {
+@Path("/administration/userSearch")
+@ApplicationScoped
+public class UserSearchWS {
 	@Inject
 	private UserService userService;
 
 	@Inject
 	private ProfileService profileService;
+
+	@Inject
+	private JsonWriter jsonWriter;
 
 	@GET
 	@Path("/findAll")
@@ -42,11 +48,9 @@ public class SearchUserWebService {
 
 	@ContextParams({
 		@ContextParam(name = "profileList", value = List.class, parameterizedArguments = Profile.class),
-		@ContextParam(name = "nbResults", value = Long.class)
 	})
 	public static class InitTemplate {
 		private List<ProfileTemplate> profileList;
-		private Long nbResults;
 
 		@ContextParam(Profile.class)
 		public static class ProfileTemplate {
@@ -60,10 +64,10 @@ public class SearchUserWebService {
 		final List<Profile> profileList = profileService.findAll();
 		final HashMap<String, Object> context = new HashMap<String, Object>();
 		context.put("profileList", profileList);
-		return new JsonWriter().writeWithTemplate(InitTemplate.class, context);
+		return jsonWriter.writeWithTemplate(InitTemplate.class, context);
 	}
 
-	@ContextParam(UserSearchResults.class)
+	@ContextParam(UserSearchResponse.class)
 	public static class SearchResponseTemplate {
 		private List<UserTemplate> listUser;
 		private Long nbResults;
@@ -79,7 +83,7 @@ public class SearchUserWebService {
 	@POST
 	@Path("/search")
 	public StreamingOutput search(final UserSearchRequest userFilter) {
-		final UserSearchResults userSearchResults = userService.search(userFilter);
-		return new JsonWriter().writeWithTemplate(SearchResponseTemplate.class, userSearchResults);
+		final UserSearchResponse userSearchResults = userService.search(userFilter);
+		return jsonWriter.writeWithTemplate(SearchResponseTemplate.class, userSearchResults);
 	}
 }

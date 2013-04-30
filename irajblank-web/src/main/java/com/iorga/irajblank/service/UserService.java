@@ -16,7 +16,7 @@ import com.iorga.irajblank.model.entity.QUser;
 import com.iorga.irajblank.model.entity.User;
 import com.iorga.irajblank.model.service.UserSaveRequest;
 import com.iorga.irajblank.model.service.UserSearchRequest;
-import com.iorga.irajblank.ws.UserSearchResults;
+import com.iorga.irajblank.model.service.UserSearchResponse;
 import com.mysema.query.jpa.HQLTemplates;
 import com.mysema.query.jpa.impl.JPAQuery;
 
@@ -29,7 +29,7 @@ public class UserService extends JPAEntityService<User, Integer> {
 		final String digestedPassword = digestPassword(login, password);
 
 		try {
-			return getEntityManager().createNamedQuery(User.QUERY_ACTIVE_BY_LOGIN_AND_PASSWORD, User.class)
+			return getEntityManager().createNamedQuery(User.FIND_ACTIVE_USER_FOR_LOGIN_AND_PASSWORD, User.class)
 				.setParameter("login", login)
 				.setParameter("password", digestedPassword)
 				.getSingleResult();
@@ -69,7 +69,7 @@ public class UserService extends JPAEntityService<User, Integer> {
 
 	public Boolean checkLoginExists(final String login) {
 		try {
-			getEntityManager().createNamedQuery(User.EXISTS_WITH_LOGIN)
+			getEntityManager().createNamedQuery(User.EXISTS_FOR_LOGIN)
 				.setParameter("login", login)
 				.getSingleResult();
 		} catch (final NoResultException e) {
@@ -88,8 +88,8 @@ public class UserService extends JPAEntityService<User, Integer> {
 		}
 	}
 
-	public UserSearchResults search(final UserSearchRequest userFilter){
-		final UserSearchResults userSearchResults = new UserSearchResults();
+	public UserSearchResponse search(final UserSearchRequest userFilter){
+		final UserSearchResponse userSearchResults = new UserSearchResponse();
 		final Long nbUser = this.countUser(userFilter);
 		final List<User> listUser = this.find(userFilter);
 
@@ -167,7 +167,7 @@ public class UserService extends JPAEntityService<User, Integer> {
 	}
 
 	public String findPasswordForLogin(final String login) throws NoResultException, NonUniqueResultException {
-		return (String) getEntityManager().createNamedQuery(User.GET_PASSWORD_FOR_LOGIN)
+		return (String) getEntityManager().createNamedQuery(User.FIND_PASSWORD_FOR_LOGIN)
 			.setParameter("login", login)
 			.getSingleResult();
 	}

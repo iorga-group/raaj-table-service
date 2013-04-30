@@ -6,7 +6,6 @@
           http://jboss.org/schema/weld/beans http://jboss.org/schema/weld/beans_1_1.xsd">
 	<weld:scan>
 	    <weld:exclude name="com.iorga.iraj.annotation.*" />
-		<weld:exclude name="com.iorga.iraj.json.*" />
 		<weld:exclude name="com.iorga.iraj.security.*" />
 		<weld:exclude name="com.iorga.iraj.service.*" />
 		<weld:exclude name="com.iorga.iraj.util.*" />

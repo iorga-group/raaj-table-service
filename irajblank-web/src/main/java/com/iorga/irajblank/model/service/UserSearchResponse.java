@@ -1,14 +1,11 @@
-package com.iorga.irajblank.ws;
+package com.iorga.irajblank.model.service;
 
 import java.util.List;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 
 import com.iorga.irajblank.model.entity.User;
 
 
-public class UserSearchResults {
+public class UserSearchResponse {
 
 	private List<User> listUser;
 
@@ -20,7 +17,7 @@ public class UserSearchResults {
 		return listUser;
 	}
 
-	public void setListUser(List<User> listUser) {
+	public void setListUser(final List<User> listUser) {
 		this.listUser = listUser;
 	}
 
@@ -28,7 +25,7 @@ public class UserSearchResults {
 		return nbPages;
 	}
 
-	public void setNbPages(double nbPages) {
+	public void setNbPages(final double nbPages) {
 		this.nbPages = nbPages;
 	}
 
@@ -36,7 +33,7 @@ public class UserSearchResults {
 		return nbResults;
 	}
 
-	public void setNbResults(Long nbResults) {
+	public void setNbResults(final Long nbResults) {
 		this.nbResults = nbResults;
 	}
 

@@ -23,16 +23,16 @@ import javax.validation.constraints.Size;
 
 @NamedQueries({
 	@NamedQuery(
-		name = User.QUERY_ACTIVE_BY_LOGIN_AND_PASSWORD,
+		name = User.FIND_ACTIVE_USER_FOR_LOGIN_AND_PASSWORD,
 		query = "from User where login = :login and password = :password and active is true"),
 	@NamedQuery(
-		name = User.EXISTS_WITH_LOGIN,
+		name = User.EXISTS_FOR_LOGIN,
 		query = "select 1 from User where login = :login"),
 	@NamedQuery(
 		name = User.UPDATE_SET_ACTIVE_FOR_USERS,
 		query = "update User user set user.active = :active where user in (:users)"),
 	@NamedQuery(
-		name = User.GET_PASSWORD_FOR_LOGIN,
+		name = User.FIND_PASSWORD_FOR_LOGIN,
 		query = "select password from User where login = :login"),
 })
 @Entity
@@ -40,10 +40,10 @@ import javax.validation.constraints.Size;
 public class User implements Serializable, Principal {
 	private static final long serialVersionUID = 1L;
 
-	public static final String QUERY_ACTIVE_BY_LOGIN_AND_PASSWORD = "User.QUERY_ACTIVE_BY_LOGIN_AND_PASSWORD";
-	public static final String EXISTS_WITH_LOGIN = "User.EXISTS_WITH_LOGIN";
+	public static final String FIND_ACTIVE_USER_FOR_LOGIN_AND_PASSWORD = "User.FIND_ACTIVE_USER_FOR_LOGIN_AND_PASSWORD";
+	public static final String EXISTS_FOR_LOGIN = "User.EXISTS_FOR_LOGIN";
 	public static final String UPDATE_SET_ACTIVE_FOR_USERS = "User.UPDATE_SET_ACTIVE_FOR_USERS";
-	public static final String GET_PASSWORD_FOR_LOGIN = "User.GET_PASSWORD_FOR_LOGIN";
+	public static final String FIND_PASSWORD_FOR_LOGIN = "User.FIND_PASSWORD_FOR_LOGIN";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,14 +1,14 @@
 <!doctype html>
 <html xmlns:ng="http://angularjs.org" id="ng-app" ng-app="blank-iraj" >
 	<head>
-		<link href="public/stylesheets/bootstrap.min.css" rel="stylesheet">
-		<link href="public/stylesheets/style.css" rel="stylesheet">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/style.css" rel="stylesheet">
 		<!--link href="stylesheets/fuelux.min.css" rel="stylesheet"-->
 	</head>
 	<body>
-		<div ng-include="'menu.html'"></div>
-		<div ng-include="'header.html'"></div>
-		<div ng-include="'login.html'" ng-controller="LoginCtrl"></div>
+		<div ng-include="'templates/includes/menu.html'"></div>
+		<div ng-include="'templates/includes/header.html'"></div>
+		<div ng-include="'templates/includes/login.html'" ng-controller="LoginCtrl"></div>
 		<div class="container" ng-view></div>
 		
 		<script src="iraj/js/crypto-js/md5.js"></script>
@@ -16,9 +16,9 @@
 		<script src="iraj/js/crypto-js/enc-base64-min.js"></script>
 		<script src="iraj/js/security-utils.js"></script>
 		
-		<script src="public/js/lib/jquery.min.js"></script>
-		<script src="public/js/lib/angular.min.js"></script>
-		<script src="public/js/lib/bootstrap.min.js"></script>
+		<script src="js/lib/jquery.min.js"></script>
+		<script src="js/lib/angular.min.js"></script>
+		<script src="js/lib/bootstrap.min.js"></script>
 		<!--[if lte IE 8]>
 			<script src="public/js/lib/json3.min.js"></script>
 		<![endif]-->
@@ -26,13 +26,15 @@
 		<script src="js/lib/require.min.js"></script> <!- https://github.com/ExactTarget/fuelux/issues/86 ->
 		<script src="js/lib/fuelux.all.min.js"></script>
 	-->
-		<script src="public/js/lib/angular-strap.min.js"></script>
+		<script src="js/lib/angular-strap.min.js"></script>
 		<script src="iraj/js/authentication-service.js"></script>
 		<script src="iraj/js/security-interceptor.js"></script>
-		<script src="public/js/app/router.js"></script>
-		<script src="public/js/app/app.js"></script>
-		<script src="public/js/controllers/home.js"></script>
-		<script src="public/js/controllers/searchUserCtrl.js"></script>
-		<script src="public/js/controllers/userCtrl.js"></script>
-		<script src="public/js/controllers/loginCtrl.js"></script>
+		<script src="js/app/router.js"></script>
+		<script src="js/directives/paginator.js"></script>
+		<script src="js/directives/sortoncolumn.js"></script>
+		<script src="js/app/app.js"></script>
+		<script src="js/controllers/home.js"></script>
+		<script src="js/controllers/administration/userSearchCtrl.js"></script>
+		<script src="js/controllers/administration/userEditCtrl.js"></script>
+		<script src="js/controllers/loginCtrl.js"></script>
 	</body>

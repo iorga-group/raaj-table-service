@@ -1,11 +1,11 @@
-function SearchUserCtrl($scope, $http, $location) {
+function UserSearchCtrl($scope, $http, $location) {
 	
-	$http.get('api/searchUser/init').success(function(data, status, headers, config) {
+	$http.get('api/administration/userSearch/init').success(function(data, status, headers, config) {
 		$scope.profileList = data.profileList;
 	});
 	
 	$scope.showUsers = function() {
-		$http.get('api/searchUser/findAll').success(function(listUser, status, headers, config) {
+		$http.get('api/administration/userSearch/findAll').success(function(listUser, status, headers, config) {
 			$scope.users = listUser;
 		});
 	};
@@ -22,7 +22,7 @@ function SearchUserCtrl($scope, $http, $location) {
 			$scope.userForm.currentPage = 1;
 		}
 		$http({
-		    url: 'api/searchUser/search',
+		    url: 'api/administration/userSearch/search',
 		    method: "POST",
 		    data: $scope.userForm
 		})
@@ -34,7 +34,7 @@ function SearchUserCtrl($scope, $http, $location) {
 	}
 	
 	$scope.findUser = function(userId){		
-		$location.path('/user/' + userId);
+		$location.path('/administration/userEdit/' + userId);
 	}
 	
 }

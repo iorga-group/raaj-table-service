@@ -5,9 +5,11 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
 
+@ApplicationScoped
 public class JsonWriter {
 	private final Map<Class<?>, Template> templateCache = new HashMap<Class<?>, Template>();
 

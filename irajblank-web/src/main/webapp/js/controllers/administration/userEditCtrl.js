@@ -1,7 +1,7 @@
-function UserCtrl($scope, $routeParams, $http) {
+function UserEditCtrl($scope, $routeParams, $http) {
 	
-	$http.get('api/searchUser/init').success(function(data, status, headers, config) {
-		$scope.profileList = data.profileList;
+	$http.get('api/administration/userEdit/init').success(function(data, status, headers, config) {
+		$scope.profileList = data;
 	});
 	
 	$scope.userForm = {
@@ -20,13 +20,13 @@ function UserCtrl($scope, $routeParams, $http) {
 	}
 	
 	if ($scope.userForm.userId != 0){
-		$http.get('api/user/find/' + $scope.userForm.userId).success(function(user, status, headers, config) {
+		$http.get('api/administration/userEdit/find/' + $scope.userForm.userId).success(function(user, status, headers, config) {
 			$scope.userForm = user;
 		});
 	}
 	
 	$scope.saveUserForm = function(){
-		$http.post('api/user/save', $scope.userForm)
+		$http.post('api/administration/userEdit/save', $scope.userForm)
 		.success(function(userId, status, headers, config){
 			$scope.userForm.userId = userId;
 			$scope.messageInfo = "L'utilisateur a bien été enregistré."
