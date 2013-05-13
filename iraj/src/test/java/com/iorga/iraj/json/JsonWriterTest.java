@@ -487,4 +487,17 @@ public class JsonWriterTest {
 		output.write(baos);
 		Assert.assertEquals("{\"simples\":[{\"fieldAppended\":\"tata111\"}]}", baos.toString());
 	}
+
+	@ContextParam(Simple.class)
+	public static class StaticFieldWithValue {
+		private final static String staticValue = "test";
+	}
+	@Test
+	public void staticFieldWithValueTest() throws WebApplicationException, IOException {
+		final Simple context = new Simple("toto");
+		final StreamingOutput output = new JsonWriter().writeWithTemplate(StaticFieldWithValue.class, context);
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		output.write(baos);
+		Assert.assertEquals("{\"staticValue\":\"test\"}", baos.toString());
+	}
 }

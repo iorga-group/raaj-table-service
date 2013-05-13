@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,7 +21,12 @@ public class ClassTemplate implements Template {
 	public ClassTemplate(final Class<?> targetClass) {
 		for(final Field targetField : targetClass.getDeclaredFields()) {
 			if (haveToInclude(targetField)) {
-				templatesToCall.add(new FieldTemplate(targetField));
+				if ((targetField.getModifiers() & Modifier.STATIC) == Modifier.STATIC) {
+					// this is a static field
+					templatesToCall.add(new StaticFieldTemplate(targetField));
+				} else {
+					templatesToCall.add(new FieldTemplate(targetField));
+				}
 			}
 		}
 		for(final Method targetMethod : targetClass.getDeclaredMethods()) {

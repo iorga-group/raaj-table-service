@@ -27,18 +27,7 @@ public abstract class PropertyTemplate<T extends AnnotatedElement & Member> impl
 		} else {
 			jsonPropertyName = getPropertyName(targetAnnotatedMember).getBytes();
 		}
-		final Class<?> declaringClass = targetAnnotatedMember.getDeclaringClass();
-		final ContextParams contextParams = declaringClass.getAnnotation(ContextParams.class);
-		if (contextParams != null) {
-			contextCaller = new MapContextCaller<T>(targetAnnotatedMember, contextParams, this);
-		} else {
-			final ContextParam contextParam = declaringClass.getAnnotation(ContextParam.class);
-			if (contextParam == null) {
-				throw new IllegalArgumentException("Can't find @ContextParam or @ContextParams on type "+declaringClass.getName()+" for member "+targetAnnotatedMember.getName());
-			} else {
-				contextCaller = createContextCallerFromContextParam(targetAnnotatedMember, contextParam);
-			}
-		}
+		contextCaller = createContextCaller(targetAnnotatedMember);
 
 		// Now compute the target type
 		final Type targetType;
@@ -77,6 +66,21 @@ public abstract class PropertyTemplate<T extends AnnotatedElement & Member> impl
 			} else {
 				// We've got different types on both sides and it's not an iterable, we can use the ClassTemplate
 				propertyTemplate = new ClassTemplate(targetTypeToken.getRawType());
+			}
+		}
+	}
+
+	protected ContextCaller createContextCaller(final T targetAnnotatedMember) {
+		final Class<?> declaringClass = targetAnnotatedMember.getDeclaringClass();
+		final ContextParams contextParams = declaringClass.getAnnotation(ContextParams.class);
+		if (contextParams != null) {
+			return new MapContextCaller<T>(targetAnnotatedMember, contextParams, this);
+		} else {
+			final ContextParam contextParam = declaringClass.getAnnotation(ContextParam.class);
+			if (contextParam == null) {
+				throw new IllegalArgumentException("Can't find @ContextParam or @ContextParams on type "+declaringClass.getName()+" for member "+targetAnnotatedMember.getName());
+			} else {
+				return createContextCallerFromContextParam(targetAnnotatedMember, contextParam);
 			}
 		}
 	}
