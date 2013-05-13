@@ -29,7 +29,7 @@ public class TransactionalInterceptor {
 		try {
 			entityManager = entityManagerInstance.get();
 			transaction = entityManager.getTransaction();
-		} catch (ContextException e) {
+		} catch (final ContextException e) {
 			log.warn("Problem while loading the entityManager, bypassing "+TransactionalInterceptor.class.getName(), e);
 		}
 		if (transaction != null) {
@@ -39,14 +39,16 @@ public class TransactionalInterceptor {
 				transactionBegun = true;
 			}
 			try {
-				Object result = invocationContext.proceed();
+				final Object result = invocationContext.proceed();
 				if (transactionBegun) {
 					transaction.commit();
 				}
 				return result;
 			} catch (final Throwable throwable) {
 				if (transactionBegun) {
-					transaction.rollback();
+					if (transaction.isActive()) {
+						transaction.rollback();
+					}
 				}
 				if (throwable instanceof Error) {
 					throw (Error) throwable;
