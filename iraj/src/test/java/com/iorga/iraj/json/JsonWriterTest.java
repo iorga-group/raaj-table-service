@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ import com.google.common.collect.Lists;
 import com.iorga.iraj.annotation.ContextParam;
 import com.iorga.iraj.annotation.ContextParams;
 import com.iorga.iraj.annotation.ContextPath;
+import com.iorga.iraj.annotation.TargetType;
 
 @SuppressWarnings("unused")
 public class JsonWriterTest {
@@ -449,5 +451,40 @@ public class JsonWriterTest {
 		final OutputStream outputStreamMock = mock(OutputStream.class);
 		output.write(outputStreamMock);
 		verify(outputStreamMock, never()).close();
+	}
+
+	@ContextParam(SimpleList.class)
+	public static class ByPassFirstSimpleListTemplate {
+		public static List<String> getStrings(final SimpleList simpleList) {
+			final LinkedList<String> strings = new LinkedList<String>(simpleList.getStrings());
+			strings.removeFirst();
+			return strings;
+		}
+	}
+	@Test
+	public void transformingMethodTest() throws WebApplicationException, IOException {
+		final SimpleList context = new SimpleList(Lists.newArrayList("toto", "tata"));
+		final StreamingOutput output = new JsonWriter().writeWithTemplate(ByPassFirstSimpleListTemplate.class, context);
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		output.write(baos);
+		Assert.assertEquals("{\"strings\":[\"tata\"]}", baos.toString());
+	}
+
+	@ContextParam(DeepList.class)
+	public static class DeepListTransformingTemplate {
+		@TargetType(value = List.class, parameterizedArguments = MethodTemplate.class)
+		public static List<Simple> getSimples(final DeepList deepList) {
+			final LinkedList<Simple> simples = new LinkedList<Simple>(deepList.getSimples());
+			simples.removeFirst();
+			return simples;
+		}
+	}
+	@Test
+	public void deepTransformingMethod() throws WebApplicationException, IOException {
+		final DeepList context = new DeepList(Lists.newArrayList(new Simple("toto"), new Simple("tata")));
+		final StreamingOutput output = new JsonWriter().writeWithTemplate(DeepListTransformingTemplate.class, context);
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		output.write(baos);
+		Assert.assertEquals("{\"simples\":[{\"fieldAppended\":\"tata111\"}]}", baos.toString());
 	}
 }

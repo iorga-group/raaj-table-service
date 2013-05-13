@@ -15,7 +15,6 @@ import com.iorga.iraj.annotation.ContextPath;
 
 public class MethodTemplate extends PropertyTemplate<Method> {
 	private static final int PUBLIC_STATIC = Modifier.STATIC | Modifier.PUBLIC;
-	protected final Template propertyTemplate;
 	protected final Method targetMethod;
 
 	public MethodTemplate(final Method targetMethod) {
@@ -26,16 +25,6 @@ public class MethodTemplate extends PropertyTemplate<Method> {
 		}
 
 		this.targetMethod = targetMethod;
-
-		final Class<?> returnType = targetMethod.getReturnType();
-		if (TemplateUtils.isTemplate(returnType)) {
-			// We still have a template, let's continue
-			propertyTemplate = new ClassTemplate(returnType);
-		} else {
-			// Let's write the returned object
-			//TODO gérer les collections
-			propertyTemplate = new ObjectValueTemplate();
-		}
 	}
 
 	@Override
