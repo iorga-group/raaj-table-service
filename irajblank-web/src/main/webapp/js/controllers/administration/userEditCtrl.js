@@ -4,7 +4,7 @@ function UserEditCtrl($scope, $routeParams, $http) {
 		$scope.profileList = data;
 	});
 	
-	$scope.userForm = {
+	$scope.userEditForm = {
 			userId : 0,
 			login: "",
 			password: "",
@@ -14,20 +14,20 @@ function UserEditCtrl($scope, $routeParams, $http) {
 			active : false
 	};
 	
-	if ($routeParams.userId){
-		$scope.userForm.userId = $routeParams.userId;
+	if ($routeParams.userId) {
+		$scope.userEditForm.userId = $routeParams.userId;
 	}
 	
-	if ($scope.userForm.userId != 0){
-		$http.get('api/administration/userEdit/find/' + $scope.userForm.userId).success(function(user, status, headers, config) {
-			$scope.userForm = user;
+	if ($scope.userEditForm.userId != 0) {
+		$http.get('api/administration/userEdit/find/' + $scope.userEditForm.userId).success(function(user, status, headers, config) {
+			$scope.userEditForm = user;
 		});
 	}
 
-	$scope.saveUserForm = function(){
-		$http.post('api/administration/userEdit/save', $scope.userForm, {irajFieldMessagesIdPrefix: 'userForm', irajClearFieldMessages: true})
+	$scope.save = function(){
+		$http.post('api/administration/userEdit/save', $scope.userEditForm, {irajMessagesIdPrefix: 'userEditForm', irajClearFieldMessages: true})
 			.success(function(userId, status, headers, config) {
-				$scope.userForm.userId = userId;
+				$scope.userEditForm.userId = userId;
 				$scope.messageInfo = "L'utilisateur a bien été enregistré."
 			});
 	}

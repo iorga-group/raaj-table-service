@@ -6,9 +6,10 @@ angular.module('iraj-message-interceptor', ['iraj-message-service'])
 			applyFieldMessages: function(response) {
 				var irajFieldMessages = response.data.irajFieldMessages;
 				if (irajFieldMessages) {
+					// there are some field messages to display
 					for (var i = 0 ; i < irajFieldMessages.length ; i++) {
 						var irajFieldMessage = irajFieldMessages[i];
-						var id = response.config.irajFieldMessagesIdPrefix;
+						var id = response.config.irajMessagesIdPrefix;
 						for (var j = 0 ; j < irajFieldMessage.propertyPath.length ; j++) {
 							if (id) {
 								id += '-';
@@ -19,8 +20,13 @@ angular.module('iraj-message-interceptor', ['iraj-message-service'])
 							message: irajFieldMessage.message,
 							type: 'error',
 							id: id
-						});
+						}, response.config.irajMessagesIdPrefix);
 					}
+				}
+				var irajMessages = response.data.irajMessages;
+				if (irajMessages) {
+					// there are some form messages to display
+					irajMessageService.displayMessages(irajMessages, response.config.irajMessagesIdPrefix);
 				}
 			}
 		}
@@ -38,7 +44,7 @@ angular.module('iraj-message-interceptor', ['iraj-message-service'])
 				},
 				'request': function(config) {
 					if (config.irajClearFieldMessages) {
-						irajMessageService.clearFieldMessages(config.irajFieldMessagesIdPrefix);
+						irajMessageService.clearFieldMessages(config.irajMessagesIdPrefix);
 					}
 					return config;
 				}

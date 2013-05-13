@@ -32,6 +32,6 @@ angular.module('iraj-security-interceptor', ['iraj-authentication-service'])
 					return config;
 				}
 			}
-		})
+		});
 	})
 ;
