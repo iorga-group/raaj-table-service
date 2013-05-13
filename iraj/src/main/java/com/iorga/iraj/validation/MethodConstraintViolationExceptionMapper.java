@@ -26,6 +26,7 @@ public class MethodConstraintViolationExceptionMapper implements ExceptionMapper
 		@ContextParam(MethodConstraintViolation.class)
 		public static class MethodConstraintViolationTemplate {
 			String message;
+			static final String type = "error";
 
 			public static Iterable<String> getPropertyPath(final MethodConstraintViolation<?> violation) {
 				return new Iterable<String>() {

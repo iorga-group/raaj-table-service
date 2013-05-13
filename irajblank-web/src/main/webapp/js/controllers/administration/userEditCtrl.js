@@ -1,4 +1,4 @@
-function UserEditCtrl($scope, $routeParams, $http) {
+function UserEditCtrl($scope, $routeParams, $http, irajMessageService) {
 	
 	$http.get('api/administration/userEdit/init').success(function(data, status, headers, config) {
 		$scope.profileList = data;
@@ -25,10 +25,10 @@ function UserEditCtrl($scope, $routeParams, $http) {
 	}
 
 	$scope.save = function(){
-		$http.post('api/administration/userEdit/save', $scope.userEditForm, {irajMessagesIdPrefix: 'userEditForm', irajClearFieldMessages: true})
+		$http.post('api/administration/userEdit/save', $scope.userEditForm, {irajMessagesIdPrefix: 'userEditForm', irajClearAllMessages: true})
 			.success(function(userId, status, headers, config) {
 				$scope.userEditForm.userId = userId;
-				$scope.messageInfo = "L'utilisateur a bien été enregistré."
+				irajMessageService.displayMessage({message: "L'utilisateur a bien été enregistré.", type: 'success'}, 'userEditForm');
 			});
 	}
 }

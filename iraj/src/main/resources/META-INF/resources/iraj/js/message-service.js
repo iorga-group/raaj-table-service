@@ -28,7 +28,7 @@ angular.module('iraj-message-service', [])
 					.addClass(fieldMessage.type);	// and add this type
 			} else {
 				// the input has not been found, let's append a "normal" message
-				irajMessageService.displayMessage(fieldMessage, irajMessagesValue);
+				irajMessageService.displayMessage({message: fieldMessage.id + ' : ' + fieldMessage.message, type: fieldMessage.type}, irajMessagesValue);
 			}
 		};
 		
@@ -76,6 +76,31 @@ angular.module('iraj-message-service', [])
 		
 		irajMessageService.appendMessageAlertToEl = function(element, message, closeButton) {
 			element.append('<div class="alert alert-'+message.type+'">'+(closeButton ? '<button type="button" class="close" data-dismiss="alert">&times;</button>' : '')+message.message+'</div>');
+		};
+		
+		irajMessageService.clearMessages = function(irajMessagesValue) {
+			var irajMessagesEl = jQuery("[irajMessages^='"+irajMessagesValue+"']");
+			if (irajMessagesEl.length > 0) {
+				irajMessagesEl.empty();
+			}
+		};
+		
+		irajMessageService.clearGlobalMessages = function() {
+			var irajGlobalMessagesEl = jQuery("[irajGlobalMessages]");
+			if (irajGlobalMessagesEl.length == 0) {
+				if (irajGlobalMessagesEl.hasClass("modal")) {
+					// It's a modal, clear only .modal-body div
+					irajGlobalMessagesEl.find('.modal-body').empty();
+				} else {
+					irajGlobalMessagesEl.empty();
+				}
+			}
+		};
+		
+		irajMessageService.clearAllMessages = function(idPrefix) {
+			irajMessageService.clearFieldMessages(idPrefix);
+			irajMessageService.clearMessages(idPrefix);
+			irajMessageService.clearGlobalMessages();
 		};
 		
 		return irajMessageService;
