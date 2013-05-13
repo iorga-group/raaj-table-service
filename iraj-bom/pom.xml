@@ -219,6 +219,11 @@ encoding/<project>=UTF-8]]>
 				<artifactId>commons-collections</artifactId>
 				<version>${version.commons-collections}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>${version.hibernate}</version>
+			</dependency>
 			<!-- 
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>

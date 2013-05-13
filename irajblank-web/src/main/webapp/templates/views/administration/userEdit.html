@@ -3,33 +3,33 @@
 		<legend ng-show="userForm.userId != 0">Modification d'utilisateur</legend>
 		<legend ng-show="userForm.userId == 0">Création d'utilisateur</legend>
 		<div class="control-group">
-			<label class="control-label" for="inputLogin">Login</label>
+			<label class="control-label" for="userForm-login">Login</label>
 			<div class="controls">
-				<input type="text" ng-model="userForm.login">
+				<input type="text" id="userForm-login" ng-model="userForm.login">
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="inputPassword">Mot de passe</label>
+			<label class="control-label" for="userForm-password">Mot de passe</label>
 			<div class="controls">
-				<input type="text" ng-model="userForm.password">
+				<input type="text" id="userForm-password" ng-model="userForm.password">
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="inputNom">Nom</label>
+			<label class="control-label" for="userForm-lastName">Nom</label>
 			<div class="controls">
-				<input type="text" ng-model="userForm.nom">
+				<input type="text" id="userForm-lastName" ng-model="userForm.lastName">
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="inputPrenom">Prenom</label>
+			<label class="control-label" for="userForm-firstName">Prenom</label>
 			<div class="controls">
-				<input type="text" ng-model="userForm.firstName">
+				<input type="text" id="userForm-firstName" ng-model="userForm.firstName">
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="selectProfile">Profile</label>
+			<label class="control-label" for="userForm-profileId">Profile</label>
 			<div class="controls">
-				<select ng-model="userForm.profileId" ng-options="profile.id as profile.label for profile in profileList"></select>
+				<select id="userForm-profileId" ng-model="userForm.profileId" ng-options="profile.id as profile.label for profile in profileList"></select>
 			</div>
 		</div>
 		<div class="control-group">

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -11,9 +12,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.StreamingOutput;
 
+import org.jboss.resteasy.spi.validation.ValidateRequest;
+
 import com.iorga.iraj.annotation.ContextParam;
 import com.iorga.iraj.annotation.ContextPath;
-import com.iorga.iraj.annotation.JsonProperty;
 import com.iorga.iraj.json.JsonWriter;
 import com.iorga.irajblank.model.entity.Profile;
 import com.iorga.irajblank.model.entity.User;
@@ -24,6 +26,7 @@ import com.iorga.irajblank.service.UserService;
 @SuppressWarnings("unused")
 @Path("/administration/userEdit")
 @ApplicationScoped
+@ValidateRequest
 public class UserEditWS {
 	@Inject
 	private UserService userService;
@@ -42,7 +45,6 @@ public class UserEditWS {
 
 		private String password;
 
-		@JsonProperty("nom")
 		private String lastName;
 
 		private String firstName;
@@ -74,7 +76,7 @@ public class UserEditWS {
 
 	@POST
 	@Path("/save")
-	public Integer save(final UserSaveRequest usar) {
-		return userService.save(usar);
+	public Integer save(@Valid final UserSaveRequest userSaveRequest) {
+		return userService.save(userSaveRequest);
 	}
 }

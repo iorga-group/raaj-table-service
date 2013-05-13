@@ -154,7 +154,7 @@ public class UserService extends JPAEntityService<User, Integer> {
 
 		user.setLogin(usar.getLogin());
 		user.setPassword(usar.getPassword());
-		user.setLastName(usar.getNom());
+		user.setLastName(usar.getLastName());
 		user.setFirstName(usar.getFirstName());
 		user.setActive(usar.getActive());
 		user.setProfile(profileService.getReference(usar.getProfileId()));

@@ -22,10 +22,12 @@ import org.jboss.resteasy.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.iorga.iraj.util.JaxRsUtils;
+
 
 public class SecurityUtils {
 	public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
-	public static final String ADDITIONAL_HEADER_PREFIX = "X-IRAJ-";
+	public static final String ADDITIONAL_HEADER_PREFIX = JaxRsUtils.HEADER_PREFIX;
 	public static final String ADDITIONAL_DATE_HEADER_NAME = ADDITIONAL_HEADER_PREFIX+"Date";
 	public static final String AUTHORIZATION_HEADER_VALUE_PREFIX = "IWS";
 

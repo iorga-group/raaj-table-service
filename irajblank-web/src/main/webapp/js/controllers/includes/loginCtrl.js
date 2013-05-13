@@ -6,7 +6,7 @@ function LoginCtrl($scope, $rootScope) {
 	$rootScope.$on('event:auth-loginRequired', function() {
 		$('#loginModal').modal('show');
 		$('#loginModal').on('shown', function() {
-			$('#loginModalLogin').focus();
+			$('#loginModal-login').focus();
 		});
 	});
 	$rootScope.$on('event:auth-loginSucced', function() {

@@ -1,7 +1,7 @@
 package com.iorga.irajblank.model.service;
 
 
-public class UserSearchRequest extends PaginatedResquest{
+public class UserSearchRequest extends PaginatedResquest {
 
 	private String nom;
 	private Integer profileId;
@@ -13,7 +13,7 @@ public class UserSearchRequest extends PaginatedResquest{
 	public String getNom() {
 		return nom;
 	}
-	public void setNom(String nom) {
+	public void setNom(final String nom) {
 		this.nom = nom;
 	}
 
@@ -21,7 +21,7 @@ public class UserSearchRequest extends PaginatedResquest{
 		return login;
 	}
 
-	public void setLogin(String login) {
+	public void setLogin(final String login) {
 		this.login = login;
 	}
 
@@ -29,7 +29,7 @@ public class UserSearchRequest extends PaginatedResquest{
 		return profileId;
 	}
 
-	public void setProfileId(Integer profileId) {
+	public void setProfileId(final Integer profileId) {
 		this.profileId = profileId;
 	}
 

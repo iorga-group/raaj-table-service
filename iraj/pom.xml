@@ -71,6 +71,11 @@
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+
 		<!-- 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -122,9 +127,9 @@
 				<configuration>
 					<jsSrcDir>src/main/resources/META-INF/resources/iraj</jsSrcDir>
 					<sourceIncludes>
-						<include>js/crypto-js/hmac-sha1.js</include>
-						<include>js/crypto-js/md5.js</include>
-						<include>js/crypto-js/enc-base64-min.js</include>
+						<include>js/lib/hmac-sha1.js</include>
+						<include>js/lib/md5.js</include>
+						<include>js/lib/enc-base64-min.js</include>
 						<include>js/security-utils.js</include>
 					</sourceIncludes>
 					<jsTestSrcDir>src/test/javascript</jsTestSrcDir>

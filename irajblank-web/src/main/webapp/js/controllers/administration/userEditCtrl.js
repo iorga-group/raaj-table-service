@@ -8,12 +8,11 @@ function UserEditCtrl($scope, $routeParams, $http) {
 			userId : 0,
 			login: "",
 			password: "",
-			nom : "",
+			lastName : "",
 			firstName : "",
 			profileId : 0,
 			active : false
-			
-	}
+	};
 	
 	if ($routeParams.userId){
 		$scope.userForm.userId = $routeParams.userId;
@@ -24,12 +23,12 @@ function UserEditCtrl($scope, $routeParams, $http) {
 			$scope.userForm = user;
 		});
 	}
-	
+
 	$scope.saveUserForm = function(){
-		$http.post('api/administration/userEdit/save', $scope.userForm)
-		.success(function(userId, status, headers, config){
-			$scope.userForm.userId = userId;
-			$scope.messageInfo = "L'utilisateur a bien été enregistré."
-		})
+		$http.post('api/administration/userEdit/save', $scope.userForm, {irajFieldMessagesIdPrefix: 'userForm', irajClearFieldMessages: true})
+			.success(function(userId, status, headers, config) {
+				$scope.userForm.userId = userId;
+				$scope.messageInfo = "L'utilisateur a bien été enregistré."
+			});
 	}
 }

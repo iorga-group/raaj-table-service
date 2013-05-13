@@ -116,13 +116,12 @@ public class User implements Serializable, Principal {
 		return getLogin();
 	}
 
-
 	public Integer getUserId() {
 		return userId;
 	}
 
-	public void setUserId(final Integer id) {
-		this.userId = id;
+	public void setUserId(final Integer userId) {
+		this.userId = userId;
 	}
 
 	public Date getVersion() {
@@ -145,48 +144,48 @@ public class User implements Serializable, Principal {
 		return login;
 	}
 
-	public void setLogin(final String lbLogi) {
-		this.login = lbLogi;
+	public void setLogin(final String login) {
+		this.login = login;
 	}
 
 	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(final String lbPass) {
-		this.password = lbPass;
+	public void setPassword(final String password) {
+		this.password = password;
 	}
 
 	public String getLastName() {
 		return lastName;
 	}
 
-	public void setLastName(final String lbNom) {
-		this.lastName = lbNom;
+	public void setLastName(final String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getFirstName() {
 		return firstName;
 	}
 
-	public void setFirstName(final String lbPren) {
-		this.firstName = lbPren;
+	public void setFirstName(final String firstName) {
+		this.firstName = firstName;
 	}
 
 	public Boolean getActive() {
 		return active;
 	}
 
-	public void setActive(final Boolean blActi) {
-		this.active = blActi;
+	public void setActive(final Boolean active) {
+		this.active = active;
 	}
 
 	public Date getCreationDate() {
 		return creationDate;
 	}
 
-	public void setCreationDate(final Date dtCrea) {
-		this.creationDate = dtCrea;
+	public void setCreationDate(final Date creationDate) {
+		this.creationDate = creationDate;
 	}
 
 	public String getCreationLogin() {
