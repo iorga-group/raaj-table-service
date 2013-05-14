@@ -500,4 +500,32 @@ public class JsonWriterTest {
 		output.write(baos);
 		Assert.assertEquals("{\"staticValue\":\"test\"}", baos.toString());
 	}
+
+	public static class Extends extends Simple {
+		private String field2;
+
+		public Extends(final String field, final String field2) {
+			super(field);
+			this.field2 = field2;
+		}
+
+		public String getField2() {
+			return field2;
+		}
+		public void setField2(final String field2) {
+			this.field2 = field2;
+		}
+	}
+	@ContextParam(Extends.class)
+	public static class ExtendsTemplate extends SimpleTemplate {
+		private String field2;
+	}
+	@Test
+	public void extendingTemplatesTest() throws WebApplicationException, IOException {
+		final Extends context = new Extends("test", "test2");
+		final StreamingOutput output = new JsonWriter().writeWithTemplate(ExtendsTemplate.class, context);
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		output.write(baos);
+		Assert.assertEquals("{\"field\":\"test\",\"field2\":\"test2\"}", baos.toString());
+	}
 }

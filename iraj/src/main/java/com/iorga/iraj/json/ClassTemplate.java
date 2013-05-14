@@ -19,6 +19,14 @@ public class ClassTemplate implements Template {
 	private final List<PropertyTemplate<?>> templatesToCall = new LinkedList<PropertyTemplate<?>>();
 
 	public ClassTemplate(final Class<?> targetClass) {
+		processClass(targetClass);
+	}
+
+	private void processClass(final Class<?> targetClass) {
+		final Class<?> superclass = targetClass.getSuperclass();
+		if (superclass != null && TemplateUtils.isTemplate(superclass)) {
+			processClass(superclass);
+		}
 		for(final Field targetField : targetClass.getDeclaredFields()) {
 			if (haveToInclude(targetField)) {
 				if ((targetField.getModifiers() & Modifier.STATIC) == Modifier.STATIC) {
