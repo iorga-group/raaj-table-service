@@ -16,6 +16,7 @@ import org.jboss.resteasy.spi.validation.ValidateRequest;
 
 import com.iorga.iraj.annotation.ContextParam;
 import com.iorga.iraj.annotation.ContextPath;
+import com.iorga.iraj.exception.FunctionalException;
 import com.iorga.iraj.json.JsonWriter;
 import com.iorga.irajblank.model.entity.Profile;
 import com.iorga.irajblank.model.entity.User;
@@ -76,7 +77,7 @@ public class UserEditWS {
 
 	@POST
 	@Path("/save")
-	public Integer save(@Valid final UserSaveRequest userSaveRequest) {
+	public Integer save(@Valid final UserSaveRequest userSaveRequest) throws FunctionalException {
 		return userService.save(userSaveRequest);
 	}
 }

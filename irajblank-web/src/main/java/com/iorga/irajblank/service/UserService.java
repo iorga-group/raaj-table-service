@@ -10,6 +10,8 @@ import javax.persistence.NonUniqueResultException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.iorga.iraj.exception.FunctionalException;
+import com.iorga.iraj.message.MessagesBuilder;
 import com.iorga.iraj.service.JPAEntityService;
 import com.iorga.iraj.util.QueryDSLUtils;
 import com.iorga.irajblank.model.entity.QUser;
@@ -50,9 +52,12 @@ public class UserService extends JPAEntityService<User, Integer> {
 	}
 
 	@Override
-	public void create(final User entity) {
+	public void create(final User entity) throws FunctionalException {
 		if (entity.getActive() == null) {
 			entity.setActive(true);
+		}
+		if (checkLoginExists(entity.getLogin())) {
+			throw new FunctionalException(new MessagesBuilder().appendFieldError("Un utilisateur avec ce login existe déjà", "login").build());
 		}
 		super.create(entity);
 	}
@@ -144,7 +149,7 @@ public class UserService extends JPAEntityService<User, Integer> {
 		return query;
 	}
 
-	public Integer save(final UserSaveRequest usar) {
+	public Integer save(final UserSaveRequest usar) throws FunctionalException {
 		User user = new User();
 		boolean newUser = true;
 		if (usar.getUserId() != 0) {
