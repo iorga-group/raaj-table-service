@@ -7,7 +7,8 @@
 	<body>
 		<div ng-include="'templates/includes/menu.html'"></div>
 		<div ng-include="'templates/includes/header.html'"></div>
-		<div ng-include="'templates/includes/login.html'" ng-controller="LoginCtrl"></div>
+		<div ng-include="'templates/includes/breadcrumbs.html'"></div>
+		<div ng-include="'templates/includes/login.html'"></div>
 		<div class="container" ng-view></div>
 		
 		<script src="iraj/js/lib/md5.js"></script>
@@ -26,6 +27,7 @@
 		<script src="iraj/js/security-interceptor.js"></script>
 		<script src="iraj/js/message-service.js"></script>
 		<script src="iraj/js/message-interceptor.js"></script>
+		<script src="iraj/js/breadcrumbs-service.js"></script>
 		<script src="js/app/router.js"></script>
 		<script src="js/directives/paginator.js"></script>
 		<script src="js/directives/sortoncolumn.js"></script>
@@ -34,4 +36,6 @@
 		<script charset="UTF-8" src="js/controllers/administration/userSearchCtrl.js"></script>
 		<script charset="UTF-8" src="js/controllers/administration/userEditCtrl.js"></script>
 		<script charset="UTF-8" src="js/controllers/includes/loginCtrl.js"></script>
+		<script charset="UTF-8" src="js/controllers/includes/menuCtrl.js"></script>
+		<script charset="UTF-8" src="js/controllers/includes/breadcrumbsCtrl.js"></script>
 	</body>

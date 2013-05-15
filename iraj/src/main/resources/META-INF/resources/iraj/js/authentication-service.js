@@ -27,12 +27,12 @@ angular.module('iraj-authentication-service', [])
 						// data : server time
 						authenticationService.timeShifting = new Date().getTime() - data;
 						authenticationService.authenticated = true;
-						$rootScope.$broadcast('event:auth-loginSucced', data, status, headers, config);
+						$rootScope.$broadcast('iraj:auth-loginSucced', data, status, headers, config);
 						authenticationService.retryAllQueries();
 					})
 					.error(function(data, status, headers, config) {
 						$rootScope = $rootScope || $injector.get('$rootScope');	// Lazy inject
-						$rootScope.$broadcast('event:auth-loginFailed', data, status, headers, config);
+						$rootScope.$broadcast('iraj:auth-loginFailed', data, status, headers, config);
 					});
 			};
 			this.appendQuery = function(config, deferred) {
@@ -68,7 +68,7 @@ angular.module('iraj-authentication-service', [])
 		};
 	})
 	.run(function($rootScope, irajAuthenticationService) {
-		$rootScope.$on('event:auth-tryLogin', function(event, login, digestedPassword) {
+		$rootScope.$on('iraj:auth-tryLogin', function(event, login, digestedPassword) {
 			irajAuthenticationService.tryLogin(login, digestedPassword);
 		});
 	})

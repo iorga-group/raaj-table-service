@@ -5,5 +5,6 @@ var module = angular.module('blank-iraj', [
 		'iraj-authentication-service',
 		'iraj-security-interceptor',
 		'iraj-message-interceptor',
-		'iraj-message-service'])
+		'iraj-message-service',
+		'iraj-breadcrumbs-service'])
 	.config(router);

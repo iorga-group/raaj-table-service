@@ -1,5 +1,17 @@
-function UserEditCtrl($scope, $routeParams, $http, irajMessageService) {
-	
+function UserEditCtrl($scope, $routeParams, $http, irajMessageService, irajBreadcrumbsService) {
+	/// Action methods ///
+	/////////////////////
+	$scope.save = function(){
+		$http.post('api/administration/userEdit/save', $scope.userEditForm, {irajMessagesIdPrefix: 'userEditForm', irajClearAllMessages: true})
+			.success(function(userId, status, headers, config) {
+				$scope.userEditForm.userId = userId;
+				irajMessageService.displayMessage({message: "L'utilisateur a bien été enregistré.", type: 'success'}, 'userEditForm');
+				irajBreadcrumbsService.replace('/administration/userEdit/'+userId, "Modification d'un utilisateur");
+			});
+	}
+
+	/// Initialization ///
+	/////////////////////
 	$http.get('api/administration/userEdit/init').success(function(data, status, headers, config) {
 		$scope.profileList = data;
 	});
@@ -22,13 +34,8 @@ function UserEditCtrl($scope, $routeParams, $http, irajMessageService) {
 		$http.get('api/administration/userEdit/find/' + $scope.userEditForm.userId).success(function(user, status, headers, config) {
 			$scope.userEditForm = user;
 		});
-	}
-
-	$scope.save = function(){
-		$http.post('api/administration/userEdit/save', $scope.userEditForm, {irajMessagesIdPrefix: 'userEditForm', irajClearAllMessages: true})
-			.success(function(userId, status, headers, config) {
-				$scope.userEditForm.userId = userId;
-				irajMessageService.displayMessage({message: "L'utilisateur a bien été enregistré.", type: 'success'}, 'userEditForm');
-			});
+		irajBreadcrumbsService.setLastLabel("Modification d'un utilisateur");
+	} else {
+		irajBreadcrumbsService.setLastLabel("Création d'un utilisateur");
 	}
 }

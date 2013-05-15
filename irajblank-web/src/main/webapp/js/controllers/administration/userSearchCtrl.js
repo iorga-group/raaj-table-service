@@ -1,20 +1,10 @@
-function UserSearchCtrl($scope, $http, $location) {
-	
-	$http.get('api/administration/userSearch/init').success(function(data, status, headers, config) {
-		$scope.profileList = data.profileList;
-	});
-	
+function UserSearchCtrl($scope, $http, $location, irajBreadcrumbsService) {
+	/// Action methods ///
+	/////////////////////
 	$scope.showUsers = function() {
 		$http.get('api/administration/userSearch/findAll').success(function(listUser, status, headers, config) {
 			$scope.users = listUser;
 		});
-	};
-	
-	$scope.userForm = {	
-			currentPage : 1,
-			pageSize : 10,
-			orderByPath : "",
-			orderByDirection : ""
 	};
 	
 	$scope.searchUser = function(newSearch){		
@@ -33,8 +23,29 @@ function UserSearchCtrl($scope, $http, $location) {
 				});
 	}
 	
-	$scope.findUser = function(userId){		
+	$scope.selectUser = function(userId){		
 		$location.path('/administration/userEdit/' + userId);
+		irajBreadcrumbsService.push($scope, $location.path());
+	}
+
+	/// Initialization ///
+	/////////////////////
+	$http.get('api/administration/userSearch/init').success(function(data, status, headers, config) {
+		$scope.profileList = data.profileList;
+	});
+	
+	// loading from last scope if necessary
+	if (irajBreadcrumbsService.shouldLoadFromLastScope()) {
+		$scope.userForm = irajBreadcrumbsService.getLast().scope.userForm;
+		$scope.searchUser();
+	} else {
+		$scope.userForm = {	
+			currentPage : 1,
+			pageSize : 10,
+			orderByPath : "",
+			orderByDirection : ""
+		};
 	}
 	
+	irajBreadcrumbsService.setLastLabel('Recherche d\'utilisateur');
 }

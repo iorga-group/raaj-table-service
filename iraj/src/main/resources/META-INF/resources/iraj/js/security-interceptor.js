@@ -22,7 +22,7 @@ angular.module('iraj-security-interceptor', ['iraj-authentication-service'])
 						if (!irajAuthenticationService.authenticated && !config.authenticating) {
 							var deferred = $q.defer();
 							irajAuthenticationService.appendQuery(config, deferred);
-							$rootScope.$broadcast('event:auth-loginRequired');
+							$rootScope.$broadcast('iraj:auth-loginRequired');
 							return deferred.promise;
 						} else {
 							// this is an api request, let's add the Authorization header
