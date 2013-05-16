@@ -47,7 +47,7 @@ public class UserSearchWS {
 
 
 	@ContextParams({
-		@ContextParam(name = "profileList", value = List.class, parameterizedArguments = Profile.class),
+		@ContextParam(name = "profileList", value = List.class, parameterizedArguments = Profile.class)
 	})
 	public static class InitTemplate {
 		private List<ProfileTemplate> profileList;

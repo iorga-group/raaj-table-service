@@ -33,7 +33,7 @@ import javax.validation.constraints.Size;
 		query = "update User user set user.active = :active where user in (:users)"),
 	@NamedQuery(
 		name = User.FIND_PASSWORD_FOR_LOGIN,
-		query = "select password from User where login = :login"),
+		query = "select password from User where login = :login")
 })
 @Entity
 @Table(name = "USER")
