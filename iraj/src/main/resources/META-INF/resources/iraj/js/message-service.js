@@ -62,6 +62,7 @@ angular.module('iraj-message-service', [])
 				// the global messages element doesn't exist, let's create a modal one
 				jQuery(document.body).append('<div irajGlobalMessages class="modal hide fade"><div class="modal-body"/><div class="modal-footer"><button class="btn btn-primary" data-dismiss="modal">OK</button></div></div>');
 				irajGlobalMessagesEl = jQuery("[irajGlobalMessages]");
+				irajGlobalMessagesEl.find('button').on('click', irajMessageService.clearGlobalMessages);
 			}
 			if (irajGlobalMessagesEl.hasClass("modal")) {
 				// this is a modal, let's append the message to its body
@@ -87,7 +88,7 @@ angular.module('iraj-message-service', [])
 		
 		irajMessageService.clearGlobalMessages = function() {
 			var irajGlobalMessagesEl = jQuery("[irajGlobalMessages]");
-			if (irajGlobalMessagesEl.length == 0) {
+			if (irajGlobalMessagesEl.length > 0) {
 				if (irajGlobalMessagesEl.hasClass("modal")) {
 					// It's a modal, clear only .modal-body div
 					irajGlobalMessagesEl.find('.modal-body').empty();
