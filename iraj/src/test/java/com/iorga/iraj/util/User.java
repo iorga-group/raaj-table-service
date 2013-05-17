@@ -31,7 +31,7 @@ import javax.persistence.Version;
 		query = "update User user set user.active = :active where user in (:users)"),
 	@NamedQuery(
 		name = User.GET_PASSWORD_WITH_LOGIN,
-		query = "select password from User where login = :login"),
+		query = "select password from User where login = :login")
 })
 @Entity
 @Table(name = "USER")

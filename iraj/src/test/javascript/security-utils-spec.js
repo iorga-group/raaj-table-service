@@ -30,11 +30,13 @@ describe('the securityUtils object', function() {
 		expect(request.headers['X-IRAJ-Date']).toBeDefined();
 	});
 	it('must not take care of the Content-Type case', function() {
+		var date = new Date().toUTCString();
 		var request1 = {
 			method: 'GET',
 			body: 'Body Test',
 			headers: {
 				'Content-Type': 'text/plain;charset=utf-8',
+				'X-IRAJ-Date': date
 			},
 			resource: '/'
 		};
@@ -44,6 +46,7 @@ describe('the securityUtils object', function() {
 			body: 'Body Test',
 			headers: {
 				'Content-Type': 'text/plain;charset=UTF-8',
+				'X-IRAJ-Date': date
 			},
 			resource: '/'
 		};

@@ -219,27 +219,6 @@ encoding/<project>=UTF-8]]>
 			</dependency>
 -->
 			<dependency>
-				<groupId>com.iorga</groupId>
-				<artifactId>irajblank-orm</artifactId>
-				<version>${project.version}</version>
-				<type>jar</type>
-				<scope>compile</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.iorga</groupId>
-				<artifactId>irajblank-services</artifactId>
-				<version>${project.version}</version>
-				<type>jar</type>
-				<scope>compile</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.iorga</groupId>
-				<artifactId>irajblank-ws</artifactId>
-				<version>${project.version}</version>
-				<type>jar</type>
-				<scope>compile</scope>
-			</dependency>
-			<dependency>
 				<groupId>commons-codec</groupId>
 				<artifactId>commons-codec</artifactId>
 				<version>${version.commons-codec}</version>
