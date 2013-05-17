@@ -22,6 +22,10 @@ public class Messages {
 		}
 	}
 
+	public boolean isEmpty() {
+		return fieldMessages.isEmpty() && messages.isEmpty();
+	}
+
 
 	/// Getters & Setters ///
 	////////////////////////

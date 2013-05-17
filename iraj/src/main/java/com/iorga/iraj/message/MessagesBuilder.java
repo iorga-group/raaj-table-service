@@ -14,6 +14,10 @@ public class MessagesBuilder {
 		return new Messages(Lists.newArrayList(fieldMessages), Lists.newArrayList(messages));
 	}
 
+	public boolean isEmpty() {
+		return fieldMessages.isEmpty() && messages.isEmpty();
+	}
+
 
 	public MessagesBuilder appendMessage(final String message, final MessageType type) {
 		messages.add(new Message(message, type));
