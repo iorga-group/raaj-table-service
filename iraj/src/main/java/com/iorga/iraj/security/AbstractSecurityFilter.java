@@ -83,11 +83,19 @@ public abstract class AbstractSecurityFilter<S extends SecurityContext> implemen
 					}
 				} catch (final ParseException e) {
 					sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid date", httpResponse, "Have to parse '"+date+"'", e);
+				} finally {
+					doFinallyAfterFindSecurityContext();
 				}
 			} else {
 				sendError(HttpServletResponse.SC_BAD_REQUEST, "Request incorrectly formated", httpResponse, "Got "+authorizationHeader);
 			}
 		}
+	}
+
+	/**
+	 * Method which is called in the finally part after the findSecurityContext method has been called
+	 */
+	protected void doFinallyAfterFindSecurityContext() {
 	}
 
 	/**
