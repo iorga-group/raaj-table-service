@@ -46,15 +46,23 @@ angular.module('iraj-breadcrumbs-service', [])
 		};
 	
 		irajBreadcrumbsService.getLast = function() {
-			return listBreadCrumb[listBreadCrumb.length-1] || {};
+			return listBreadCrumb[listBreadCrumb.length-1] || null;
 		};
 
 		irajBreadcrumbsService.shouldLoadFromLastScope = function() {
-			return irajBreadcrumbsService.getLast().scope;
+			if (irajBreadcrumbsService.getLast()){
+				return irajBreadcrumbsService.getLast().scope;
+			} else {
+				return false;
+			}
 		};
 		
 		irajBreadcrumbsService.setLastLabel = function(label) {
-			irajBreadcrumbsService.getLast().label = label;
+			if (irajBreadcrumbsService.getLast()) {
+				irajBreadcrumbsService.getLast().label = label;
+			} else {
+				this.init($location.path(), label);
+			}
 		}
 
 		return irajBreadcrumbsService;
