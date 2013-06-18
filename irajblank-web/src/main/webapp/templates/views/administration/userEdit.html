@@ -1,37 +1,32 @@
-<form class="form-horizontal" ng-submit="save()">
+<form iraj-id-prefix="userEditForm" class="form-horizontal" ng-submit="save()">
 	<fieldset>
 		<legend ng-show="userEditForm.userId != 0">Modification d'utilisateur</legend>
 		<legend ng-show="userEditForm.userId == 0">Création d'utilisateur</legend>
 		<div irajMessages="userEditForm" />
-		<div class="control-group">
-			<label class="control-label" for="userEditForm-login">Login</label>
-			<div class="controls">
-				<input type="text" id="userEditForm-login" ng-model="userEditForm.login">
-			</div>
+		
+		<div iraj-control iraj-field="login" iraj-label="Login">
+			<input type="text">
+		</div>
+		<div iraj-control iraj-field="password" iraj-label="Mot de passe">
+			<input type="text">
+		</div>
+		<div iraj-control iraj-field="lastName" iraj-label="Nom">
+			<input type="text">
+		</div>
+		<div iraj-control iraj-field="firstName" iraj-label="Prénom">
+			<input type="text">
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="userEditForm-password">Mot de passe</label>
+			<label class="control-label" for="userEditForm-profileId2">Profile</label>
 			<div class="controls">
-				<input type="text" id="userEditForm-password" ng-model="userEditForm.password">
+				<select id="userEditForm-profileId2" ng-model="userEditForm.profileId" ng-options="profile.id as profile.label for profile in profileList"></select>
 			</div>
 		</div>
-		<div class="control-group">
-			<label class="control-label" for="userEditForm-lastName">Nom</label>
-			<div class="controls">
-				<input type="text" id="userEditForm-lastName" ng-model="userEditForm.lastName">
-			</div>
+		<div iraj-control iraj-field="profileId" iraj-label="Profile">
+			<select ng-options="profile.id as profile.label for profile in profileList" />
 		</div>
-		<div class="control-group">
-			<label class="control-label" for="userEditForm-firstName">Prenom</label>
-			<div class="controls">
-				<input type="text" id="userEditForm-firstName" ng-model="userEditForm.firstName">
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="userEditForm-profileId">Profile</label>
-			<div class="controls">
-				<select id="userEditForm-profileId" ng-model="userEditForm.profileId" ng-options="profile.id as profile.label for profile in profileList"></select>
-			</div>
+		<div iraj-control="checkbox" iraj-field="active" iraj-label="Actif">
+			<input type="checkbox">
 		</div>
 		<div class="control-group">
 			<div class="controls">
@@ -40,6 +35,7 @@
 				</label>
 			</div>
 		</div>
+		
 		<button type="submit" class="btn" style="float:right">Enregistrer</button>
 	</fieldset>
 </form>

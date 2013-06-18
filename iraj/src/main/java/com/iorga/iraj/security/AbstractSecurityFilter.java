@@ -21,6 +21,8 @@ import org.jboss.resteasy.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.iorga.iraj.message.MessagesBuilder;
+
 
 /**
  * Security filter (for example for webservices), based on http://docs.amazonwebservices.com/AmazonS3/latest/dev/RESTAuthentication.html and
@@ -32,7 +34,6 @@ public abstract class AbstractSecurityFilter<S extends SecurityContext> implemen
 
 	private final static String BASE64_REGEXP = "(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?";	// Read on http://stackoverflow.com/a/475217/535203
 	private final static Pattern AUTHORIZATION_HEADER_PATTERN = Pattern.compile("^"+SecurityUtils.AUTHORIZATION_HEADER_VALUE_PREFIX+" (\\w+):("+BASE64_REGEXP+")$");
-
 
 	@Override
 	public void init(final FilterConfig filterConfig) throws ServletException {
@@ -70,7 +71,7 @@ public abstract class AbstractSecurityFilter<S extends SecurityContext> implemen
 								if (serverSignature.equalsIgnoreCase(signature)) {
 									doFilterWhenSecurityOK(httpRequest, httpResponse, chain, multiReadHttpRequest, accessKeyId);
 								} else {
-									sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unvalid signature", httpResponse, "Got "+signature+", was expecting "+serverSignature);
+									rejectSignature(signature, serverSignature, httpResponse);
 								}
 							} catch (final NoSuchAlgorithmException e) {
 								throw new ServletException(e);
@@ -79,7 +80,7 @@ public abstract class AbstractSecurityFilter<S extends SecurityContext> implemen
 							}
 						}
 					} else {
-						sendError(HttpServletResponse.SC_UNAUTHORIZED, "AccessKeyId unknown or invalid", httpResponse, "Couldn't find SecurityContext for "+accessKeyId);
+						rejectAccessKeyId(accessKeyId, httpResponse);
 					}
 				} catch (final ParseException e) {
 					sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid date", httpResponse, "Have to parse '"+date+"'", e);
@@ -121,6 +122,20 @@ public abstract class AbstractSecurityFilter<S extends SecurityContext> implemen
 		}
 	}
 
+	protected void rejectAccessKeyId(final String accessKeyId, final HttpServletResponse httpResponse) throws IOException {
+		rejectGenericInvalidAccessKeyIdOrSignature("Couldn't find SecurityContext for "+accessKeyId, httpResponse);
+//		sendError(HttpServletResponse.SC_UNAUTHORIZED, "AccessKeyId unknown or invalid", httpResponse, "Couldn't find SecurityContext for "+accessKeyId);
+	}
+
+	protected void rejectSignature(final String signature, final String serverSignature, final HttpServletResponse httpResponse) throws IOException {
+		rejectGenericInvalidAccessKeyIdOrSignature("Got "+signature+", was expecting "+serverSignature, httpResponse);
+//		sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unvalid signature", httpResponse, "Got "+signature+", was expecting "+serverSignature);
+	}
+
+	protected void rejectGenericInvalidAccessKeyIdOrSignature(final String debugMessage, final HttpServletResponse httpResponse) throws IOException {
+		sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid accessKeyId or signature", httpResponse, debugMessage);
+	}
+
 	protected static void sendError(final int sc, final String message, final HttpServletResponse resp) throws IOException {
 		sendError(sc, message, resp, null, null);
 	}
@@ -142,7 +157,9 @@ public abstract class AbstractSecurityFilter<S extends SecurityContext> implemen
 				log.debug(logMessage);
 			}
 		}
-		resp.sendError(sc, message);
+
+		resp.setStatus(sc);
+		new MessagesBuilder().appendError(message).build().writeToOutputStream(resp.getOutputStream());
 	}
 
 	@Override

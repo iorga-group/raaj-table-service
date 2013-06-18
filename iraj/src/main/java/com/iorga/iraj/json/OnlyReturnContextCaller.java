@@ -3,10 +3,10 @@ package com.iorga.iraj.json;
 import java.lang.reflect.Type;
 
 public class OnlyReturnContextCaller implements ContextCaller {
-	private final Type contextType;
+	private final Type returnType;
 
-	public OnlyReturnContextCaller(final Type contextType) {
-		this.contextType = contextType;
+	public OnlyReturnContextCaller(final Type returnType) {
+		this.returnType = returnType;
 	}
 
 	@Override
@@ -15,8 +15,8 @@ public class OnlyReturnContextCaller implements ContextCaller {
 	}
 
 	@Override
-	public Type getSourceType() {
-		return contextType;
+	public Type getReturnType() {
+		return returnType;
 	}
 
 }

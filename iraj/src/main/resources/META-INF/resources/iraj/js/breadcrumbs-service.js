@@ -48,6 +48,10 @@ angular.module('iraj-breadcrumbs-service', [])
 		irajBreadcrumbsService.getLast = function() {
 			return listBreadCrumb[listBreadCrumb.length-1] || null;
 		};
+		
+		irajBreadcrumbsService.getLastIndex = function() {
+			return listBreadCrumb.length-1;
+		};
 
 		irajBreadcrumbsService.shouldLoadFromLastScope = function() {
 			if (irajBreadcrumbsService.getLast()){
@@ -58,9 +62,9 @@ angular.module('iraj-breadcrumbs-service', [])
 		};
 		
 		irajBreadcrumbsService.setLastLabel = function(label) {
-			if (irajBreadcrumbsService.getLast()) {
+			if (irajBreadcrumbsService.getLast()){
 				irajBreadcrumbsService.getLast().label = label;
-			} else {
+			}else{
 				this.init($location.path(), label);
 			}
 		}

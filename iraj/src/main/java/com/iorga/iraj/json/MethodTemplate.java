@@ -1,19 +1,19 @@
 package com.iorga.iraj.json;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-
-import javax.ws.rs.WebApplicationException;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.iorga.iraj.annotation.ContextParam;
+import com.google.common.collect.Maps;
 import com.iorga.iraj.annotation.ContextPath;
+import com.iorga.iraj.json.MethodTemplate.MethodContextCaller;
 
-public class MethodTemplate extends PropertyTemplate<Method> {
+public class MethodTemplate extends PropertyTemplate<Method, MethodContextCaller> {
 	private static final int PUBLIC_STATIC = Modifier.STATIC | Modifier.PUBLIC;
 	protected final Method targetMethod;
 
@@ -27,8 +27,95 @@ public class MethodTemplate extends PropertyTemplate<Method> {
 		this.targetMethod = targetMethod;
 	}
 
+	public static class MethodContextCaller implements ContextCaller {
+		protected final ContextCaller[] parameterCallers;
+		protected final Method targetMethod;
+
+		public MethodContextCaller(final Method targetMethod) {
+			this.targetMethod = targetMethod;
+			final Annotation[][] parameterAnnotations = targetMethod.getParameterAnnotations();
+			parameterCallers = new ContextCaller[parameterAnnotations.length];
+
+			for (int i = 0; i < parameterAnnotations.length; i++) {
+				final Annotation[] parameterAnnotation = parameterAnnotations[i];
+
+				// Create the annotatedParameter in order to work on it more simply
+				final Map<Class<?>, Annotation> parameterAnnotationMap = Maps.newHashMap();
+				for (final Annotation annotation : parameterAnnotation) {
+					parameterAnnotationMap.put(annotation.getClass(), annotation);
+				}
+
+				final int index = i;
+				final AnnotatedElement annotatedParameter = new AnnotatedElement() {
+					@Override
+					public boolean isAnnotationPresent(final Class<? extends Annotation> annotationClass) {
+						return parameterAnnotationMap.containsKey(annotationClass);
+					}
+
+					@Override
+					public Annotation[] getDeclaredAnnotations() {
+						return parameterAnnotation;
+					}
+
+					@Override
+					public Annotation[] getAnnotations() {
+						return parameterAnnotation;
+					}
+
+					@SuppressWarnings("unchecked")
+					@Override
+					public <T extends Annotation> T getAnnotation(final Class<T> annotationClass) {
+						return (T) parameterAnnotationMap.get(annotationClass);
+					}
+
+					@Override
+					public String toString() {
+						return "Argument "+index+" for "+targetMethod;
+					}
+				};
+
+				// determine if we must create a complex context caller (@ContextPath has been specified) or a simple one which will just retrieve the context
+				if (annotatedParameter.isAnnotationPresent(ContextPath.class)) {
+					// this is a complex context caller
+					parameterCallers[i] = ContextCallerUtils.createContextCaller(getPropertyNameFromMethod(targetMethod), annotatedParameter, targetMethod.getDeclaringClass());
+				} else {
+					// No @ContextPath, we just want the context to be passed to the target method
+					parameterCallers[i] = ContextCallerUtils.createOnlyReturnContextCaller(targetMethod.getDeclaringClass());
+				}
+			}
+		}
+
+		@Override
+		public Object callContext(final Object context) {
+			// Will call all the arguments
+			final Object[] parameterValues = new Object[parameterCallers.length];
+			for (int i = 0; i < parameterCallers.length; i++) {
+				parameterValues[i] = parameterCallers[i].callContext(context);
+			}
+			try {
+				return targetMethod.invoke(null, parameterValues);
+			} catch (final Exception e) {
+				throw new IllegalStateException("Problem while calling "+targetMethod, e);
+			}
+		}
+
+		@Override
+		public Type getReturnType() {
+			return targetMethod.getGenericReturnType();
+		}
+	}
+
+	@Override
+	protected MethodContextCaller createContextCaller(final Method targetMethod) {
+		return new MethodContextCaller(targetMethod);
+	}
+
 	@Override
 	protected String getPropertyName(final Method targetMethod) {
+		return getPropertyNameFromMethod(targetMethod);
+	}
+
+	private static String getPropertyNameFromMethod(final Method targetMethod) {
 		String name = targetMethod.getName();
 		if (name.startsWith("get")) {
 			name = name.substring(3);
@@ -43,24 +130,7 @@ public class MethodTemplate extends PropertyTemplate<Method> {
 		return targetMethod.getGenericReturnType();
 	}
 
-	@Override
-	protected ContextCaller createContextCallerFromContextParam(final Method targetMethod, final ContextParam contextParam) {
-		if (targetMethod.isAnnotationPresent(ContextPath.class)) {
-			// We have an explicite context path declaration, handle it as usual
-			return super.createContextCallerFromContextParam(targetMethod, contextParam);
-		} else {
-			// No explicite @ContextPath, must get the context object directly
-			return new OnlyReturnContextCaller(getPropertyType(targetMethod));
-		}
+	public static boolean isMethodTemplate(final Method targetMethod) {
+		return PropertyTemplate.isPropertyTemplate(targetMethod) && (targetMethod.getModifiers() & PUBLIC_STATIC) == PUBLIC_STATIC;
 	}
-
-	@Override
-	protected void writeJsonPropertyValue(final OutputStream output, final Object context) throws WebApplicationException, IOException {
-		try {
-			propertyTemplate.writeJson(output, targetMethod.invoke(null, contextCaller.callContext(context)));
-		} catch (final Exception e) {
-			throw new IllegalStateException("Problem while calling "+targetMethod, e);
-		}
-	}
-
 }

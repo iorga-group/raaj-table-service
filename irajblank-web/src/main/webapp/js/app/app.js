@@ -6,5 +6,9 @@ var module = angular.module('blank-iraj', [
 		'iraj-security-interceptor',
 		'iraj-message-interceptor',
 		'iraj-message-service',
-		'iraj-breadcrumbs-service'])
-	.config(router);
+		'iraj-breadcrumbs-service',
+		'iraj-progress-interceptor'])
+	.config(router)
+	.config(function(irajProgressInterceptorProvider) {
+		irajProgressInterceptorProvider.setDefaultMessage('Chargement en cours...');
+	});

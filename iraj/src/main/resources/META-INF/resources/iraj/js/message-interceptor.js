@@ -32,6 +32,7 @@ angular.module('iraj-message-interceptor', ['iraj-message-service'])
 					// there are some form messages to display
 					irajMessageService.displayMessages(irajMessages, response.config.irajMessagesIdPrefix);
 				}
+				return irajFieldMessages || irajMessages;
 			}
 		}
 	})
@@ -43,7 +44,10 @@ angular.module('iraj-message-interceptor', ['iraj-message-service'])
 					return response;
 				},
 				'responseError': function(rejection) {
-					irajMessageInterceptor.applyFieldMessages(rejection);
+					if (!irajMessageInterceptor.applyFieldMessages(rejection)) {
+						// no message found in the request, it's a more global problem, let's display it
+						irajMessageService.displayMessage({message: rejection.status+' : '+rejection.data, type: 'error'});
+					}
 					return $q.reject(rejection);
 				},
 				'request': function(config) {

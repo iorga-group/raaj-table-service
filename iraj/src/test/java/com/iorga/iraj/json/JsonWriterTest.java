@@ -21,6 +21,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.iorga.iraj.annotation.ContextParam;
 import com.iorga.iraj.annotation.ContextParams;
 import com.iorga.iraj.annotation.ContextPath;
@@ -144,20 +145,6 @@ public class JsonWriterTest {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		output.write(baos);
 		Assert.assertEquals("{\"fieldAppended\":\"test111\"}", baos.toString());
-	}
-
-	@ContextParam(Simple.class)
-	public static class NotStaticMethodTemplate {
-		public String getFieldAppended(final Simple simple) {
-			return simple.getField() + "111";
-		}
-	}
-	@Test(expected = IllegalArgumentException.class)
-	public void mustHaveStaticPublicMethod() throws WebApplicationException, IOException {
-		final Simple context = new Simple("test");
-		final StreamingOutput output = new JsonWriter().writeWithTemplate(NotStaticMethodTemplate.class, context);
-		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		output.write(baos);
 	}
 
 	public static class SimpleFields {
@@ -527,5 +514,37 @@ public class JsonWriterTest {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		output.write(baos);
 		Assert.assertEquals("{\"field\":\"test\",\"field2\":\"test2\"}", baos.toString());
+	}
+
+	@ContextParam(Simple.class)
+	public static class PrivateMethodTemplate {
+		private String field;
+
+		private static void getMyPrivateMethod() {
+		}
+	}
+	@Test
+	public void onlyTryToIncludeMethodWithContextParameterTest() throws WebApplicationException, IOException {
+		final Simple context = new Simple("test");
+		final StreamingOutput output = new JsonWriter().writeWithTemplate(PrivateMethodTemplate.class, context);
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		output.write(baos);
+		Assert.assertEquals("{\"field\":\"test\"}", baos.toString());
+	}
+
+	@ContextParams(
+		@ContextParam(name = "list", value = List.class, parameterizedArguments = Simple.class)
+	)
+	public static class ListTemplate {
+		private List<Simple> list;
+	}
+	@Test
+	public void listInATemplateMappingToDirectTypeTest() throws WebApplicationException, IOException {
+		final Map<String, Object> context = Maps.newHashMap();
+		context.put("list", Lists.newArrayList(new Simple("test1"), new Simple("test2")));
+		final StreamingOutput output = new JsonWriter().writeWithTemplate(ListTemplate.class, context);
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		output.write(baos);
+		Assert.assertEquals("{\"list\":[{\"field\":\"test1\"},{\"field\":\"test2\"}]}", baos.toString());
 	}
 }

@@ -1,8 +1,16 @@
 package com.iorga.iraj.message;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
+import javax.ws.rs.WebApplicationException;
+
+import com.iorga.iraj.json.JsonWriter;
+
 public class Messages {
+	private static final JsonWriter JSON_WRITER = new JsonWriter();
+
 	private final List<FieldMessage> fieldMessages;
 	private final List<Message> messages;
 
@@ -24,6 +32,10 @@ public class Messages {
 
 	public boolean isEmpty() {
 		return fieldMessages.isEmpty() && messages.isEmpty();
+	}
+
+	public void writeToOutputStream(final OutputStream outputStream) throws WebApplicationException, IOException {
+		JSON_WRITER.writeWithTemplate(MessagesTemplate.class, this).write(outputStream);
 	}
 
 

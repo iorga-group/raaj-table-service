@@ -3,7 +3,9 @@ package com.iorga.iraj.service;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.service.spi.ServiceException;
 
@@ -40,6 +42,16 @@ public abstract class JPAEntityService<E, I> extends JPAService implements Entit
 		final Class<E> entityClass = getEntityTypeToken();
 		final CriteriaQuery<E> query = entityManager.getCriteriaBuilder().createQuery(entityClass);
 		query.from(entityClass);
+		return entityManager.createQuery(query).getResultList();
+	}
+	
+	public List<E> findAllWithOrderBy(String column) {
+		final EntityManager entityManager = getEntityManager();
+		final Class<E> entityClass = getEntityTypeToken();
+		final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		final CriteriaQuery<E> query = cb.createQuery(entityClass);
+		Root<E> b = query.from(entityClass);
+		query.orderBy(cb.asc(b.get(column)));
 		return entityManager.createQuery(query).getResultList();
 	}
 

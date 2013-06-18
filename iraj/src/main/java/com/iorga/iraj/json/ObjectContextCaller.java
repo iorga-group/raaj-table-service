@@ -1,20 +1,29 @@
 package com.iorga.iraj.json;
 
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.iorga.iraj.annotation.ContextParam;
+import com.iorga.iraj.annotation.ContextPath;
 
 public class ObjectContextCaller implements ContextCaller {
 	private Method getter;
 	private final ContextCaller nextContextCaller;
 
-	public <T extends AnnotatedElement & Member> ObjectContextCaller(final T targetAnnotatedMember, final ContextParam contextParam, final PropertyTemplate<T> propertyTemplate) {
-		this(contextParam.value(), ContextCallerUtils.getContextPath(targetAnnotatedMember, propertyTemplate));
+	public ObjectContextCaller(final String elementName, final AnnotatedElement annotatedElement, final ContextParam contextParam) {
+		this(contextParam.value(), getContextPath(elementName, annotatedElement));
+	}
+
+	private static String getContextPath(final String elementName, final AnnotatedElement annotatedElement) {
+		final ContextPath contextPathAnnotation = annotatedElement.getAnnotation(ContextPath.class);
+		if (contextPathAnnotation != null) {
+			return contextPathAnnotation.value();
+		} else {
+			return elementName;
+		}
 	}
 
 	public ObjectContextCaller(final Class<?> currentClass, final String currentContextPath) throws SecurityException {
@@ -53,8 +62,8 @@ public class ObjectContextCaller implements ContextCaller {
 	}
 
 	@Override
-	public Type getSourceType() {
-		return nextContextCaller != null ? nextContextCaller.getSourceType() : getter.getGenericReturnType();
+	public Type getReturnType() {
+		return nextContextCaller != null ? nextContextCaller.getReturnType() : getter.getGenericReturnType();
 	}
 
 }

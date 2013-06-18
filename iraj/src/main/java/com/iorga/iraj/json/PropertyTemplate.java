@@ -4,21 +4,20 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Member;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import javax.ws.rs.WebApplicationException;
 
 import com.google.common.reflect.TypeToken;
-import com.iorga.iraj.annotation.ContextParam;
-import com.iorga.iraj.annotation.ContextParams;
+import com.iorga.iraj.annotation.ContextPath;
+import com.iorga.iraj.annotation.IgnoreProperty;
 import com.iorga.iraj.annotation.JsonProperty;
 import com.iorga.iraj.annotation.TargetType;
 
-public abstract class PropertyTemplate<T extends AnnotatedElement & Member> implements Template {
-	protected final ContextCaller contextCaller;
+public abstract class PropertyTemplate<T extends AnnotatedElement & Member, C extends ContextCaller> implements Template {
 	protected final byte[] jsonPropertyName;
 	protected final Template propertyTemplate;
+	protected final C contextCaller;
 
 	public PropertyTemplate(final T targetAnnotatedMember) {
 		final JsonProperty jsonProperty = targetAnnotatedMember.getAnnotation(JsonProperty.class);
@@ -33,24 +32,11 @@ public abstract class PropertyTemplate<T extends AnnotatedElement & Member> impl
 		final Type targetType;
 		final TargetType targetTypeAnnotation = targetAnnotatedMember.getAnnotation(TargetType.class);
 		if (targetTypeAnnotation != null) {
-			targetType = new ParameterizedType() {
-				@Override
-				public Type getRawType() {
-					return targetTypeAnnotation.value();
-				}
-				@Override
-				public Type getOwnerType() {
-					return targetTypeAnnotation.value().getDeclaringClass();
-				}
-				@Override
-				public Type[] getActualTypeArguments() {
-					return targetTypeAnnotation.parameterizedArguments();
-				}
-			};
+			targetType = TemplateUtils.getGenericType(targetTypeAnnotation);
 		} else {
 			targetType = getPropertyType(targetAnnotatedMember);
 		}
-		final Type sourceType = contextCaller.getSourceType();
+		final Type sourceType = contextCaller.getReturnType();
 		final TypeToken<?> targetTypeToken = TypeToken.of(targetType);
 		final TypeToken<?> sourceTypeToken = TypeToken.of(sourceType);
 
@@ -70,30 +56,16 @@ public abstract class PropertyTemplate<T extends AnnotatedElement & Member> impl
 		}
 	}
 
-	protected ContextCaller createContextCaller(final T targetAnnotatedMember) {
-		final Class<?> declaringClass = targetAnnotatedMember.getDeclaringClass();
-		final ContextParams contextParams = declaringClass.getAnnotation(ContextParams.class);
-		if (contextParams != null) {
-			return new MapContextCaller<T>(targetAnnotatedMember, contextParams, this);
-		} else {
-			final ContextParam contextParam = declaringClass.getAnnotation(ContextParam.class);
-			if (contextParam == null) {
-				throw new IllegalArgumentException("Can't find @ContextParam or @ContextParams on type "+declaringClass.getName()+" for member "+targetAnnotatedMember.getName());
-			} else {
-				return createContextCallerFromContextParam(targetAnnotatedMember, contextParam);
-			}
-		}
+	public static boolean isPropertyTemplate(final AnnotatedElement annotatedElement) {
+		return annotatedElement.isAnnotationPresent(ContextPath.class) || annotatedElement.isAnnotationPresent(JsonProperty.class) || !annotatedElement.isAnnotationPresent(IgnoreProperty.class);
 	}
 
-	protected ContextCaller createContextCallerFromContextParam(final T targetAnnotatedMember, final ContextParam contextParam) {
-		return new ObjectContextCaller(targetAnnotatedMember, contextParam, this);
-	}
+
+	protected abstract C createContextCaller(final T targetAnnotatedMember);
 
 	protected abstract String getPropertyName(T targetAnnotatedMember);
 
 	protected abstract Type getPropertyType(T targetAnnotatedMember);
-
-	protected abstract void writeJsonPropertyValue(OutputStream output, Object context) throws WebApplicationException, IOException;
 
 	@Override
 	public void writeJson(final OutputStream output, final Object context) throws IOException, WebApplicationException {
@@ -101,7 +73,6 @@ public abstract class PropertyTemplate<T extends AnnotatedElement & Member> impl
 		output.write(jsonPropertyName);
 		output.write('"');
 		output.write(':');
-		writeJsonPropertyValue(output, context);
-//		getPropertyTemplate().writeJson(output, contextCaller.callContext(context));
+		propertyTemplate.writeJson(output, contextCaller.callContext(context));
 	}
 }

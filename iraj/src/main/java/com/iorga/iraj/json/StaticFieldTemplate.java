@@ -14,7 +14,7 @@ public class StaticFieldTemplate extends FieldTemplate {
 		targetField.setAccessible(true);
 		return new ContextCaller() {
 			@Override
-			public Type getSourceType() {
+			public Type getReturnType() {
 				return targetField.getGenericType();
 			}
 

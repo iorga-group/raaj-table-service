@@ -1,13 +1,9 @@
 package com.iorga.iraj.json;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
-import javax.ws.rs.WebApplicationException;
-
-public class FieldTemplate extends PropertyTemplate<Field> {
+public class FieldTemplate extends PropertyTemplate<Field, ContextCaller> {
 
 	public FieldTemplate(final Field targetField) {
 		super(targetField);
@@ -24,8 +20,8 @@ public class FieldTemplate extends PropertyTemplate<Field> {
 	}
 
 	@Override
-	protected void writeJsonPropertyValue(final OutputStream output, final Object context) throws WebApplicationException, IOException {
-		propertyTemplate.writeJson(output, contextCaller.callContext(context));
+	protected ContextCaller createContextCaller(final Field targetField) {
+		return ContextCallerUtils.createContextCaller(targetField.getName(), targetField, targetField.getDeclaringClass());
 	}
 
 }
