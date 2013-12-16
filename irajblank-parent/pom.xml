@@ -13,7 +13,7 @@
 		<java.version>1.6</java.version>
 
 		<!-- artifact versions -->
-		<version.iraj>1.1.0</version.iraj>
+		<version.iraj>1.1.1-SNAPSHOT</version.iraj>
 		<version.resteasy>2.3.6.Final</version.resteasy>
 		<version.slf4j-log4j12>1.6.1</version.slf4j-log4j12>
 		<version.arquillian>1.0.0.Final</version.arquillian>
