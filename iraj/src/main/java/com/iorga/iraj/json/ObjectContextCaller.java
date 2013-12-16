@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2013 Iorga Group
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
+ */
 package com.iorga.iraj.json;
 
 import java.lang.reflect.AnnotatedElement;
@@ -50,14 +66,19 @@ public class ObjectContextCaller implements ContextCaller {
 	@Override
 	public Object callContext(final Object context) {
 		try {
-			final Object nextContext = getter.invoke(context);
-			if (nextContext != null && nextContextCaller != null) {
-				return nextContextCaller.callContext(nextContext);
+			if (context != null) {
+				final Object nextContext = getter.invoke(context);
+				if (nextContext != null && nextContextCaller != null) {
+					return nextContextCaller.callContext(nextContext);
+				} else {
+					return nextContext;
+				}
 			} else {
-				return nextContext;
+				// If the current object is null, let's return null in order to avoid NPE
+				return null;
 			}
 		} catch (final Exception e) {
-			throw new IllegalStateException("Couldn't call "+getter);
+			throw new IllegalStateException("Couldn't call "+getter, e);
 		}
 	}
 

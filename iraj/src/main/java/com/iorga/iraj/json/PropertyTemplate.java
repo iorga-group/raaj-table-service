@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2013 Iorga Group
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
+ */
 package com.iorga.iraj.json;
 
 import java.io.IOException;
@@ -19,7 +35,7 @@ public abstract class PropertyTemplate<T extends AnnotatedElement & Member, C ex
 	protected final Template propertyTemplate;
 	protected final C contextCaller;
 
-	public PropertyTemplate(final T targetAnnotatedMember) {
+	public PropertyTemplate(final T targetAnnotatedMember, final JsonWriter jsonWriter) {
 		final JsonProperty jsonProperty = targetAnnotatedMember.getAnnotation(JsonProperty.class);
 		if (jsonProperty != null) {
 			jsonPropertyName = jsonProperty.value().getBytes();
@@ -48,10 +64,10 @@ public abstract class PropertyTemplate<T extends AnnotatedElement & Member, C ex
 			if (Iterable.class.isAssignableFrom(targetTypeToken.getRawType())) {
 				// We've got Iterables on both side, so the propertyTemplate is a class one, which will convert from the sourceItemType to the targetItemType
 				final Class<?> sourceItemClass = targetTypeToken.resolveType(Iterable.class.getTypeParameters()[0]).getRawType();
-				propertyTemplate = new IterableTemplate(new ClassTemplate(sourceItemClass));
+				propertyTemplate = new IterableTemplate(ClassTemplate.getOrCreate(sourceItemClass, jsonWriter));
 			} else {
 				// We've got different types on both sides and it's not an iterable, we can use the ClassTemplate
-				propertyTemplate = new ClassTemplate(targetTypeToken.getRawType());
+				propertyTemplate = ClassTemplate.getOrCreate(targetTypeToken.getRawType(), jsonWriter);
 			}
 		}
 	}

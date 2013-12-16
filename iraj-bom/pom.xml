@@ -3,9 +3,39 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.iorga</groupId>
 	<artifactId>iraj-bom</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<name>Iorga REST Architecture for Java - BOM</name>
 	<packaging>pom</packaging>
+	<url>https://github.com/iorga-group/webapp-watcher.git</url>
+	<description>Webapp Watcher (WAW) is a Java EE Filter which alows you to log the requests response times and Java stack traces of a Java EE web application (.war). You can later compute usage statistics of the web application, and also track down potential bugs with the tool "waw-analyzer"</description>
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License, LGPL v3</name>
+			<url>http://www.gnu.org/licenses/lgpl.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<scm>
+		<url>https://github.com/iorga-group/iraj.git</url>
+		<connection>scm:git:git://github.com/iorga-group/iraj.git</connection>
+		<developerConnection>scm:git:git@github.com:iorga-group/iraj.git</developerConnection>
+	</scm>
+	
+	<developers>
+		<developer>
+			<name>Anthony OGIER</name>
+			<email>aogier@iorga.com</email>
+			<organization>Iorga Group</organization>
+			<organizationUrl>http://www.iorga.com/</organizationUrl>
+		</developer>
+	</developers>
 
 	<modules>
 		<module>../iraj</module>
@@ -14,7 +44,7 @@
 	<properties>
 		<!-- Project globals -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.6</java.version>
+		<java.version>1.7</java.version>
 
 		<!-- artifact versions -->
 		<version.querydsl>3.1.0</version.querydsl>
@@ -31,6 +61,8 @@
 		<version.commons-codec>1.7</version.commons-codec>
 		<version.commons-io>2.4</version.commons-io>
 		<version.commons-collections>3.2.1</version.commons-collections>
+		<version.jsoup>1.7.2</version.jsoup>
+		<version.tomcat-catalina>7.0.42</version.tomcat-catalina>
 		<!-- 
 		<version.jackson>2.1.4</version.jackson>
 		 -->
@@ -74,6 +106,9 @@ encoding/<project>=UTF-8]]>
 							</file>
 						</additionalConfig>
 						<wtpversion>2.0</wtpversion>
+						<classpathContainers>
+							<classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</classpathContainer>
+						</classpathContainers>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -83,26 +118,10 @@ encoding/<project>=UTF-8]]>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
 					<version>2.2.1</version>
-					<executions>
-						<execution>
-							<id>attach-sources</id>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-						</execution>
-					</executions>
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>2.9</version>
-					<executions>
-						<execution>
-							<id>attach-javadoc</id>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-						</execution>
-					</executions>
 				</plugin>
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
@@ -116,38 +135,6 @@ encoding/<project>=UTF-8]]>
 			</plugins>
 		</pluginManagement>
 	</build>
-
-	<repositories>
-		<repository>
-			<id>jboss-public-repository-group</id>
-			<name>JBoss Public Maven Repository Group</name>
-			<url>http://repository.jboss.org/nexus/content/groups/public</url>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-				<updatePolicy>never</updatePolicy>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.6</version>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>index</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-		</plugins>
-	</reporting>
 
 	<dependencyManagement>
 		<dependencies>
@@ -224,6 +211,11 @@ encoding/<project>=UTF-8]]>
 				<artifactId>hibernate-validator</artifactId>
 				<version>${version.hibernate}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.jsoup</groupId>
+				<artifactId>jsoup</artifactId>
+				<version>${version.jsoup}</version>
+			</dependency>
 			<!-- 
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
@@ -243,6 +235,13 @@ encoding/<project>=UTF-8]]>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>3.0.1</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.tomcat</groupId>
+				<artifactId>tomcat-catalina</artifactId>
+				<version>${version.tomcat-catalina}</version>
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>

@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2013 Iorga Group
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
+ */
 'use strict';
 
 angular.module('iraj-breadcrumbs-service', [])
@@ -16,6 +32,11 @@ angular.module('iraj-breadcrumbs-service', [])
 			listBreadCrumb.push({index : taille, label : label, path: path});
 			$rootScope.$broadcast('iraj:breadcrumbs-refresh');
 		};
+		
+		irajBreadcrumbsService.changePathAndPush = function(scope, path, label) {
+			$location.path(path);
+			irajBreadcrumbsService.push(scope, $location.path());
+		}
 	
 		irajBreadcrumbsService.init = function(path, label) {
 			listBreadCrumb = [];
@@ -25,11 +46,8 @@ angular.module('iraj-breadcrumbs-service', [])
 	
 		irajBreadcrumbsService.switchTo = function(index) {
 			var newListBreadCrumb = [];
-			for (var i=0; i<listBreadCrumb.length; i++) {
+			for (var i=0; i<=index; i++) {
 				newListBreadCrumb.push(listBreadCrumb[i]);
-				if (i == index){
-					break;
-				}
 			}
 			listBreadCrumb = newListBreadCrumb;
 			$rootScope.$broadcast('iraj:breadcrumbs-refresh');
@@ -47,6 +65,10 @@ angular.module('iraj-breadcrumbs-service', [])
 	
 		irajBreadcrumbsService.getLast = function() {
 			return listBreadCrumb[listBreadCrumb.length-1] || null;
+		};
+	
+		irajBreadcrumbsService.getPrevious = function() {
+			return listBreadCrumb[listBreadCrumb.length-2] || null;
 		};
 		
 		irajBreadcrumbsService.getLastIndex = function() {

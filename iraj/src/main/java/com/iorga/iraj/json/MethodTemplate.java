@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2013 Iorga Group
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
+ */
 package com.iorga.iraj.json;
 
 import java.lang.annotation.Annotation;
@@ -17,8 +33,8 @@ public class MethodTemplate extends PropertyTemplate<Method, MethodContextCaller
 	private static final int PUBLIC_STATIC = Modifier.STATIC | Modifier.PUBLIC;
 	protected final Method targetMethod;
 
-	public MethodTemplate(final Method targetMethod) {
-		super(targetMethod);
+	public MethodTemplate(final Method targetMethod, final JsonWriter jsonWriter) {
+		super(targetMethod, jsonWriter);
 
 		if ((targetMethod.getModifiers() & PUBLIC_STATIC) != PUBLIC_STATIC) {
 			throw new IllegalArgumentException(targetMethod+" must be public static in order to be called without instantiating the template");
