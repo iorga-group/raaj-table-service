@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.iorga</groupId>
 	<artifactId>iraj-bom</artifactId>
-	<version>1.1.0-SNAPSHOT</version>
+	<version>1.1.0</version>
 	<name>Iorga REST Architecture for Java - BOM</name>
 	<packaging>pom</packaging>
 	<url>https://github.com/iorga-group/webapp-watcher.git</url>
