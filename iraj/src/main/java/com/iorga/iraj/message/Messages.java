@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.StreamingOutput;
 
 import com.iorga.iraj.json.JsonWriter;
 
@@ -52,6 +53,15 @@ public class Messages {
 
 	public void writeToOutputStream(final OutputStream outputStream) throws WebApplicationException, IOException {
 		JSON_WRITER.writeWithTemplate(MessagesTemplate.class, this).write(outputStream);
+	}
+
+	public StreamingOutput toStreamingOutput() {
+		return new StreamingOutput() {
+			@Override
+			public void write(final OutputStream outputStream) throws IOException, WebApplicationException {
+				writeToOutputStream(outputStream);
+			}
+		};
 	}
 
 
