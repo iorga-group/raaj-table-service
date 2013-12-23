@@ -17,9 +17,37 @@
 'use strict';
 
 angular.module('iraj-message-service', [])
-	.factory('irajMessageService', function() {
-		var irajMessageService = {};
+	.provider('irajMessageService', function() {
+		var irajMessageService = {},
+			bootstrapVersion = '2.x',
+			helpClass = '',
+			helpElement = '',
+			typePrefix = '',
+			controlGroupClass = '',
+			allTypeClassesStr = '';
 		
+		
+		// config
+		this.setBootstrapVersion = function(bootstrapVersionParam) {
+			// can be '2.x' or '3.x'
+			bootstrapVersion = bootstrapVersionParam;
+			if (bootstrapVersion == '2.x') {
+				helpClass = 'help-inline';
+				helpElement = 'div';
+				typePrefix = '';
+				controlGroupClass = 'control-group';
+				allTypeClassesStr = 'warning error info success';
+			} else if (bootstrapVersion == '3.x') {
+				helpClass = 'help-block';
+				helpElement = 'p';
+				typePrefix = 'has-';
+				controlGroupClass = 'form-group';
+				allTypeClassesStr = 'has-warning has-error has-info has-success';
+			}
+		};
+		this.setBootstrapVersion('2.x'); // default to bootstrap 2.x
+		
+		// service
 		irajMessageService.displayFieldMessages = function(fieldMessages, irajMessagesValue) {
 			// fieldMessages = [{id: 'fieldId', message: 'messageToDisplay', type: 'warning' | 'error' | 'info' | 'success'}, ...]
 			for (var i = 0; i < fieldMessages.length; i++) {
@@ -31,17 +59,17 @@ angular.module('iraj-message-service', [])
 			var inputEl = jQuery('#'+fieldMessage.id); // search the input field
 			if (inputEl.length > 0) {
 				// search the help-inline for that input
-				var helpEl = inputEl.next('.help-inline');
+				var helpEl = inputEl.next('.'+helpClass);
 				if (helpEl.length == 0) {
 					// the help inline doesn't exist, let's create it
-					helpEl = inputEl.after('<div class="help-inline"/>').next('.help-inline');
+					helpEl = inputEl.after('<'+helpElement+' class="'+helpClass+'"/>').next('.'+helpClass);
 				}
 				// append the message to it
 				helpEl.append(fieldMessage.message);
 				// now search the parent "control-group" in order to change the type of warning
-				inputEl.parents('.control-group').eq(0)
-					.removeClass("warning error info success") // first remove previous messages type
-					.addClass(fieldMessage.type);	// and add this type
+				inputEl.parents('.'+controlGroupClass).eq(0)
+					.removeClass(allTypeClassesStr) // first remove previous messages type
+					.addClass(typePrefix+fieldMessage.type);	// and add this type
 			} else {
 				// the input has not been found, let's append a "normal" message
 				irajMessageService.displayMessage({message: fieldMessage.id + ' : ' + fieldMessage.message, type: fieldMessage.type}, irajMessagesValue);
@@ -49,10 +77,10 @@ angular.module('iraj-message-service', [])
 		};
 		
 		irajMessageService.clearFieldMessages = function(idPrefix) {
-			jQuery("[id^='"+idPrefix+"'] ~ .help-inline") // foreach help-inline which has a matching input as previous sibling
+			jQuery("[id^='"+idPrefix+"'] ~ ."+helpClass) // foreach help-inline which has a matching input as previous sibling
 				.empty() // clear all text inside
-				.parents('.control-group') // search the control-group
-				.removeClass("warning error info success"); // and remove the type of message
+				.parents('.'+controlGroupClass) // search the control-group
+				.removeClass(allTypeClassesStr); // and remove the type of message
 		};
 		
 		irajMessageService.displayMessages = function(messages, irajMessagesValue) {
@@ -76,7 +104,10 @@ angular.module('iraj-message-service', [])
 			var irajGlobalMessagesEl = jQuery("[irajGlobalMessages]");
 			if (irajGlobalMessagesEl.length == 0) {
 				// the global messages element doesn't exist, let's create a modal one
-				jQuery(document.body).append('<div irajGlobalMessages class="modal hide fade"><div class="modal-body"/><div class="modal-footer"><button class="btn btn-primary" data-dismiss="modal">OK</button></div></div>');
+				jQuery(document.body).append('<div irajGlobalMessages class="modal fade'+(bootstrapVersion == '3.x' ? '" data-show="false"' : ' hide"')+'>'+(bootstrapVersion == '3.x' ? '<div class="modal-dialog"><div class="modal-content">' : '')
+						+'<div class="modal-body"/><div class="modal-footer"><button class="btn btn-primary" data-dismiss="modal">OK</button></div>'
+						+(bootstrapVersion == '3.x' ? '</div></div>' : '')
+						+'</div>');
 				irajGlobalMessagesEl = jQuery("[irajGlobalMessages]");
 				irajGlobalMessagesEl.find('button').on('click', irajMessageService.clearGlobalMessages);
 			}
@@ -92,7 +123,11 @@ angular.module('iraj-message-service', [])
 		};
 		
 		irajMessageService.appendMessageAlertToEl = function(element, message, closeButton) {
-			element.append('<div class="alert alert-'+message.type+'">'+(closeButton ? '<button type="button" class="close" data-dismiss="alert">&times;</button>' : '')+message.message+'</div>');
+			var type = message.type;
+			if (type == 'error' && bootstrapVersion == '3.x') {
+				type = 'danger';
+			}
+			element.append('<div class="alert alert-'+type+(bootstrapVersion == '3.x' ? ' fade in' : '')+'">'+(closeButton ? '<button type="button" class="close" data-dismiss="alert">&times;</button>' : '')+'<p>'+message.message+'</p></div>');
 		};
 		
 		irajMessageService.clearMessages = function(irajMessagesValue) {
@@ -120,6 +155,8 @@ angular.module('iraj-message-service', [])
 			irajMessageService.clearGlobalMessages();
 		};
 		
-		return irajMessageService;
+		this.$get = function() {
+			return irajMessageService;
+		}
 	})
 ;
