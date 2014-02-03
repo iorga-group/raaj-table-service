@@ -18,11 +18,12 @@
 
 angular.module('iraj-progress-interceptor', [])
 	.provider('irajProgressInterceptor', function() {
-		var defaultMessage;
+		var defaultMessage,
+			progressImgSrc='iraj/img/progress.gif';
 		var callback = function(nbRequests, message, config) {
 			var irajGlobalProgressEl = jQuery('[irajGlobalProgress]');
 			if (irajGlobalProgressEl.length == 0) {
-				jQuery(document.body).append('<div irajGlobalProgress><img irajGlobalProgressImg src="iraj/img/progress.gif" /><span irajGlobalProgressNbRequests class="badge"></span><span irajGlobalProgressMessage /></div>');
+				jQuery(document.body).append('<div irajGlobalProgress><img irajGlobalProgressImg src="'+progressImgSrc+'" /><span irajGlobalProgressNbRequests class="badge"></span><span irajGlobalProgressMessage /></div>');
 				irajGlobalProgressEl = jQuery('[irajGlobalProgress]');
 			}
 			var irajGlobalProgressMessageEl = irajGlobalProgressEl.find('[irajGlobalProgressMessage]');
@@ -59,6 +60,10 @@ angular.module('iraj-progress-interceptor', [])
 		
 		this.setDefaultMessage = function(defaultMessageParam) {
 			defaultMessage = defaultMessageParam;
+		}
+		
+		this.setProgressImgSrc = function(progressImgSrcParam) {
+			progressImgSrc = progressImgSrcParam;
 		}
 	
 		this.$get = function() {
