@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.validation.MessageInterpolator;
+import javax.validation.Validation;
 
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
@@ -27,6 +28,9 @@ import org.jboss.resteasy.spi.ResteasyProviderFactory;
 public class HttpRequestLocaleMessageInterpolator implements MessageInterpolator {
 	private final MessageInterpolator delegate;
 
+	public HttpRequestLocaleMessageInterpolator() {
+		this(Validation.byDefaultProvider().configure().getDefaultMessageInterpolator());
+	}
 
 	public HttpRequestLocaleMessageInterpolator(final MessageInterpolator delegate) {
 		this.delegate = delegate;

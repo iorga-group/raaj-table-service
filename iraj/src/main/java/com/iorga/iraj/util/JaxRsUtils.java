@@ -18,6 +18,7 @@ package com.iorga.iraj.util;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 
 import com.iorga.iraj.json.JsonWriter;
 
@@ -28,9 +29,14 @@ public class JaxRsUtils {
 	public static final String EXCEPTION_HEADER = HEADER_PREFIX+"Exception";
 
 	public static Response throwableToIrajResponse(final Class<?> templateClass, final Throwable throwable) {
+		StreamingOutput streamingOutput = JSON_WRITER.writeWithTemplate(templateClass, throwable);
+		return throwableToIrajResponse(streamingOutput, throwable);
+	}
+
+	public static Response throwableToIrajResponse(StreamingOutput streamingOutput, final Throwable throwable) {
 		return Response.status(Response.Status.BAD_REQUEST)
 			.header(EXCEPTION_HEADER, throwable.getClass().getName())
-			.entity(JSON_WRITER.writeWithTemplate(templateClass, throwable))
+			.entity(streamingOutput)
 			.type(MediaType.APPLICATION_JSON_TYPE)
 			.build();
 	}

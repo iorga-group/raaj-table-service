@@ -12,7 +12,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.StreamingOutput;
 
-import org.jboss.resteasy.spi.validation.ValidateRequest;
+import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 
 import com.iorga.iraj.annotation.ContextParam;
 import com.iorga.iraj.annotation.ContextPath;
