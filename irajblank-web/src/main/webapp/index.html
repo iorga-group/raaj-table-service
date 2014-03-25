@@ -1,7 +1,10 @@
 <!doctype html>
 <html xmlns:ng="http://angularjs.org" id="ng-app" ng-app="blank-iraj" >
 	<head>
-		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<!-- bower:css -->
+		<link rel="stylesheet" href="lib/ng-table/ng-table.css" />
+		<link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.css" />
+		<!-- endbower -->
 		<link href="iraj/css/progress-interceptor.css" rel="stylesheet">
 		<link href="css/style.css" rel="stylesheet">
 	</head>
@@ -12,14 +15,18 @@
 		<div ng-include="'templates/includes/login.html'"></div>
 		<div class="container" ng-view></div>
 		
+		<!-- bower:js -->
+		<script src="lib/jquery/dist/jquery.js"></script>
+		<script src="lib/angular/angular.js"></script>
+		<script src="lib/ng-table/ng-table.js"></script>
+		<script src="lib/bootstrap/dist/js/bootstrap.js"></script>
+		<!-- endbower -->
+		
 		<script src="iraj/js/lib/md5.js"></script>
 		<script src="iraj/js/lib/hmac-sha1.js"></script>
 		<script src="iraj/js/lib/enc-base64-min.js"></script>
 		<script src="iraj/js/security-utils.js"></script>
 		
-		<script src="iraj/js/lib/jquery.min.js"></script>
-		<script src="iraj/js/lib/angular.js"></script>
-		<script src="js/lib/bootstrap.min.js"></script>
 		<!--[if lte IE 8]>
 			<script src="public/js/lib/json3.min.js"></script>
 		<![endif]-->
@@ -34,10 +41,13 @@
 		<script src="js/directives/paginator.js"></script>
 		<script src="js/directives/sortoncolumn.js"></script>
 		<script src="js/app/app.js"></script>
-		<script charset="UTF-8" src="js/controllers/homeCtrl.js"></script>
-		<script charset="UTF-8" src="js/controllers/administration/userSearchCtrl.js"></script>
+		
+		<!-- injector:js -->
 		<script charset="UTF-8" src="js/controllers/administration/userEditCtrl.js"></script>
+		<script charset="UTF-8" src="js/controllers/administration/userSearchCtrl.js"></script>
+		<script charset="UTF-8" src="js/controllers/homeCtrl.js"></script>
+		<script charset="UTF-8" src="js/controllers/includes/breadcrumbsCtrl.js"></script>
 		<script charset="UTF-8" src="js/controllers/includes/loginCtrl.js"></script>
 		<script charset="UTF-8" src="js/controllers/includes/menuCtrl.js"></script>
-		<script charset="UTF-8" src="js/controllers/includes/breadcrumbsCtrl.js"></script>
+		<!-- endinjector -->
 	</body>

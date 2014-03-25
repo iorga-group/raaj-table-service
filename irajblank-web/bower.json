@@ -1,0 +1,9 @@
+{
+  "name": "irajblank-web",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular": "~1.2.15",
+    "ng-table": "~0.3.1",
+    "bootstrap": "~3.1.1"
+  }
+}
