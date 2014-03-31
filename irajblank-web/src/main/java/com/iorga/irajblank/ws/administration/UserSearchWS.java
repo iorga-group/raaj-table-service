@@ -16,11 +16,9 @@ import com.iorga.iraj.json.JsonWriter;
 import com.iorga.irajblank.model.entity.Profile;
 import com.iorga.irajblank.model.entity.User;
 import com.iorga.irajblank.model.service.UserSearchRequest;
-import com.iorga.irajblank.model.service.UserSearchResponse;
 import com.iorga.irajblank.service.ProfileService;
 import com.iorga.irajblank.service.UserService;
 
-@SuppressWarnings("unused")
 @Path("/administration/userSearch")
 @ApplicationScoped
 public class UserSearchWS {
@@ -41,8 +39,8 @@ public class UserSearchWS {
 
 	@ContextParam(Profile.class)
 	public static class ProfileResponseTemplate {
-		private Integer id;
-		private String label;
+		Integer id;
+		String label;
 	}
 
 
@@ -50,12 +48,12 @@ public class UserSearchWS {
 		@ContextParam(name = "profileList", value = List.class, parameterizedArguments = Profile.class)
 	})
 	public static class InitTemplate {
-		private List<ProfileTemplate> profileList;
+		List<ProfileTemplate> profileList;
 
 		@ContextParam(Profile.class)
 		public static class ProfileTemplate {
-			private Integer id;
-			private String label;
+			Integer id;
+			String label;
 		}
 	}
 	@GET
@@ -67,23 +65,15 @@ public class UserSearchWS {
 		return jsonWriter.writeWithTemplate(InitTemplate.class, context);
 	}
 
-	@ContextParam(UserSearchResponse.class)
-	public static class SearchResponseTemplate {
-		private List<UserTemplate> listUser;
-		private Long nbResults;
-		private double nbPages;
-
-		@ContextParam(User.class)
-		public static class UserTemplate {
-			private Integer userId;
-			private String lastName;
-			private String firstName;
-		}
+	@ContextParam(User.class)
+	public static class UserTemplate {
+		Integer userId;
+		String lastName;
+		String firstName;
 	}
 	@POST
 	@Path("/search")
-	public StreamingOutput search(final UserSearchRequest userFilter) {
-		final UserSearchResponse userSearchResults = userService.search(userFilter);
-		return jsonWriter.writeWithTemplate(SearchResponseTemplate.class, userSearchResults);
+	public StreamingOutput search(final UserSearchRequest userSearchRequest) {
+		return jsonWriter.writeIterableWithTemplate(UserTemplate.class, userService.search(userSearchRequest));
 	}
 }

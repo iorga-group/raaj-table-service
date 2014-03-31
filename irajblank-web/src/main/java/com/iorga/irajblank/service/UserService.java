@@ -8,18 +8,15 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import com.iorga.iraj.exception.FunctionalException;
 import com.iorga.iraj.message.MessagesBuilder;
 import com.iorga.iraj.service.JPAEntityService;
-import com.iorga.iraj.util.QueryDSLUtils;
+import com.iorga.iraj.service.SearchQuery;
 import com.iorga.irajblank.model.entity.QUser;
 import com.iorga.irajblank.model.entity.User;
 import com.iorga.irajblank.model.service.UserSaveRequest;
 import com.iorga.irajblank.model.service.UserSearchRequest;
-import com.iorga.irajblank.model.service.UserSearchResponse;
-import com.mysema.query.jpa.HQLTemplates;
 import com.mysema.query.jpa.impl.JPAQuery;
 
 public class UserService extends JPAEntityService<User, Integer> {
@@ -93,60 +90,29 @@ public class UserService extends JPAEntityService<User, Integer> {
 		}
 	}
 
-	public UserSearchResponse search(final UserSearchRequest userFilter){
-		final UserSearchResponse userSearchResults = new UserSearchResponse();
-		final Long nbUser = this.countUser(userFilter);
-		final List<User> listUser = this.find(userFilter);
+	private final SearchQuery<User, QUser, UserSearchRequest> userSearchQuery = new SearchQuery<User, QUser, UserSearchRequest>() {
+		@Override
+		public void configureSearchQuery(QUser qUser, UserSearchRequest searchRequest, JPAQuery jpaQuery) {
+			jpaQuery.from(qUser);
 
-		userSearchResults.setNbPages(Math.ceil((float)nbUser/userFilter.getPageSize()));
-		userSearchResults.setNbResults(nbUser);
-		userSearchResults.setListUser(listUser);
+			if (searchRequest.getNom() != null){
+				jpaQuery.where(qUser.lastName.containsIgnoreCase(searchRequest.getNom()));
+			}
+			if (searchRequest.getProfileId() != null){
+				jpaQuery.where(qUser.profile.id.eq(searchRequest.getProfileId()));
+			}
+			if (searchRequest.getLogin() != null){
+				jpaQuery.where(qUser.lastName.containsIgnoreCase(searchRequest.getLogin()));
+			}
+		}
+	};
 
-		return userSearchResults;
+	public long searchCount(final UserSearchRequest userSearchRequest) {
+		return userSearchQuery.searchCount(QUser.user, userSearchRequest, getEntityManager());
 	}
 
-	public long countUser(final UserSearchRequest userFilter) {
-		final QUser qUser = QUser.user;
-
-		final JPAQuery query = this.composeQuery(qUser, userFilter);
-
-		return query.count();
-	}
-
-	public List<User> find(final UserSearchRequest userFilter) {
-
-		final QUser qUser = QUser.user;
-
-		//Tous les many-to-one et one-to-many sont en lazy load (chargé uniquement si on accède à la propriété)
-
-		final JPAQuery query = this.composeQuery(qUser, userFilter);
-
-		if (StringUtils.isNotBlank(userFilter.getOrderByPath())) {
-			query.orderBy(QueryDSLUtils.parseOrderSpecifier(userFilter.getOrderByPath(), userFilter.getOrderByDirection(), qUser));
-		}
-
-		query.offset((userFilter.getCurrentPage()-1)*userFilter.getPageSize());
-		query.limit(userFilter.getPageSize());
-		return query.list(qUser);
-	}
-
-	private JPAQuery composeQuery(final QUser qUser, final UserSearchRequest userFilter){
-
-		final JPAQuery query = new JPAQuery(getEntityManager(), HQLTemplates.DEFAULT);
-
-		query.from(qUser);
-
-		if (userFilter.getNom() != null){
-			query.where(qUser.lastName.containsIgnoreCase(userFilter.getNom()));
-		}
-		if (userFilter.getProfileId() != null){
-			query.where(qUser.profile.id.eq(userFilter.getProfileId()));
-		}
-		if (userFilter.getLogin() != null){
-			query.where(qUser.lastName.containsIgnoreCase(userFilter.getLogin()));
-		}
-
-		return query;
+	public List<User> search(final UserSearchRequest userSearchRequest) {
+		return userSearchQuery.search(QUser.user, userSearchRequest, userSearchRequest.getSearchScope(), getEntityManager());
 	}
 
 	public Integer save(final UserSaveRequest usar) throws FunctionalException {

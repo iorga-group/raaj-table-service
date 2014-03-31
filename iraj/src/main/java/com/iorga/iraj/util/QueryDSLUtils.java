@@ -16,8 +16,12 @@
  */
 package com.iorga.iraj.util;
 
+import java.util.Map.Entry;
+
 import org.apache.commons.lang3.StringUtils;
 
+import com.iorga.iraj.service.SearchScope;
+import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.Expression;
 import com.mysema.query.types.OrderSpecifier;
 import com.mysema.query.types.expr.ComparableExpressionBase;
@@ -42,5 +46,18 @@ public class QueryDSLUtils {
 		} else {
 			return ((ComparableExpressionBase<T>)listExpression).asc();
 		}
+	}
+
+	public static JPAQuery addOrderBysOffsetAndLimit(JPAQuery jpaQuery, SearchScope searchScope, final Expression<?> baseExpression) {
+		for (Entry<String, String> sortingEntry : searchScope.getSorting().entrySet()) {
+			String path = sortingEntry.getKey();
+			if (StringUtils.isNotBlank(path)) {
+				jpaQuery.orderBy(parseOrderSpecifier(path, sortingEntry.getValue(), baseExpression));
+			}
+		}
+
+		return jpaQuery
+			.offset((searchScope.getCurrentPage() - 1) * searchScope.getCountPerPage())
+			.limit(searchScope.getCountPerPage());
 	}
 }

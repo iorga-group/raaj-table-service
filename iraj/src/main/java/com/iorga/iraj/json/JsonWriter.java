@@ -57,7 +57,7 @@ public class JsonWriter {
 		return templateCache.put(templateClass, classTemplate);
 	}
 
-	public StreamingOutput writeIterableWithTemplate(final Class<?> itemTemplateClass, final Object iterableContext) {
+	public StreamingOutput writeIterableWithTemplate(final Class<?> itemTemplateClass, final Iterable<?> iterableContext) {
 		final Template itemTemplate = new IterableTemplate(getFromCacheOrCreateTemplate(itemTemplateClass));
 		return new StreamingOutput() {
 			@Override
