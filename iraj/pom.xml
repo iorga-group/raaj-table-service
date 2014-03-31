@@ -141,9 +141,9 @@
 				<configuration>
 					<jsSrcDir>src/main/resources/META-INF/resources/iraj</jsSrcDir>
 					<sourceIncludes>
-						<include>js/lib/hmac-sha1.js</include>
-						<include>js/lib/md5.js</include>
-						<include>js/lib/enc-base64-min.js</include>
+						<include>js/lib/cryptojs-hmac-sha1.min.js</include>
+						<include>js/lib/cryptojs-md5.min.js</include>
+						<include>js/lib/cryptojs-enc-base64.min.js</include>
 						<include>js/security-utils.js</include>
 					</sourceIncludes>
 					<jsTestSrcDir>src/test/javascript</jsTestSrcDir>

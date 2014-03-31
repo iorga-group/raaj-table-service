@@ -1,3 +1,5 @@
+@import '../webapp/lib/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss';
+
 a {
 	color: #00B7FF;
 }
@@ -12,18 +14,17 @@ a {
 	color: white;
 }
 
-.breadcrumbs{
+.breadcrumbs {
 	overflow: hidden;
 	width: 100%;
 	list-style: none;
+    li {
+        float: left;
+        margin: 0 2em 0 0;
+    }
 }
 
-.breadcrumbs li{
-	float: left;
-	margin: 0 2em 0 0;
-}
-
-.breadcrumbs a{
+.breadcrumbs a {
 	padding: 0.3em 0.5em 0.3em 1.4em;
 	float: left;
 	text-decoration: none;
@@ -35,12 +36,12 @@ a {
 	border-radius: .4em 0 0 .4em;	
 }
 
-.breadcrumbs a:hover{
+.breadcrumbs a:hover {
 	background: #9F9F9F;
 	color: #FEFEFE;
 }
 
-.breadcrumbs a::after{
+.breadcrumbs a::after {
 	background: #F4F4F4;
 	content: "";
 	height: 2.5em;
@@ -55,18 +56,18 @@ a {
 	border-radius: .4em;
 }
 
-.breadcrumbs a:hover::after{
+.breadcrumbs a:hover::after {
 	background: #9F9F9F;
 	color: #FEFEFE;
 }
 
 .breadcrumbs .current,
-.breadcrumbs .current:hover{
+.breadcrumbs .current:hover {
 	font-weight: bold;
 	background: none;
 	color: #444;
 }
 
-.breadcrumbs .current::after{
+.breadcrumbs .current::after {
 	content: normal;
 }

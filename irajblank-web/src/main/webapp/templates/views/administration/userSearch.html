@@ -1,18 +1,18 @@
-<form ng-submit="search()">
+<form class="form-inline" ng-submit="search()">
 	<fieldset>
 		<legend>Recherche d'utilisateur</legend>
-		<label>Nom</label>
-		<input type="text" ng-model="userForm.nom" placeholder="Type something…">
+		<label for="nom">Nom</label>
+		<input id="nom" class="form-control" type="text" ng-model="userForm.nom" placeholder="Type something…">
 		
-		<label>Login</label>
-		<input type="text" ng-model="userForm.login" placeholder="Type something…">
+		<label for="login">Login</label>
+		<input id="login" class="form-control" type="text" ng-model="userForm.login" placeholder="Type something…">
 		
-		<label>Profile</label>
-		<select ng-model="userForm.profileId" ng-options="profile.id as profile.label for profile in profileList">
+		<label for="profile">Profile</label>
+		<select id="profile" class="form-control" ng-model="userForm.profileId" ng-options="profile.id as profile.label for profile in profileList">
 			<option value="">Tous</option>
 		</select>
 		
-		<button type="submit" class="btn">Rechercher</button>
+		<button type="submit" class="btn btn-primary">Rechercher</button>
 	</fieldset>
 </form>
 

@@ -1,2 +1,5 @@
 /src/main/webapp/lib
+/src/main/webapp/dist
 /node_modules
+.sass-cache
+.tmp

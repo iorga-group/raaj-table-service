@@ -1,4 +1,7 @@
-function UserSearchCtrl($scope, $http, $location, irajBreadcrumbsService, irajTableService) {
+'use strict';
+
+angular.module('blank-iraj')
+.controller('UserSearchCtrl', function ($scope, $http, $location, irajBreadcrumbsService, irajTableService) {
 	/// Action methods ///
 	/////////////////////
 	
@@ -31,14 +34,14 @@ function UserSearchCtrl($scope, $http, $location, irajBreadcrumbsService, irajTa
 		});
 	};
 	
-	$scope.selectUser = function(userId){		
+	$scope.selectUser = function(userId){
 		$location.path('/administration/userEdit/' + userId);
 		irajBreadcrumbsService.push($scope, $location.path());
 	};
 
 	/// Initialization ///
 	/////////////////////
-	$http.get('api/administration/userSearch/init').success(function(data, status, headers, config) {
+	$http.get('api/administration/userSearch/init').success(function(data) {
 		$scope.profileList = data.profileList;
 	});
 	
@@ -59,13 +62,13 @@ function UserSearchCtrl($scope, $http, $location, irajBreadcrumbsService, irajTa
 		$scope.userForm = irajBreadcrumbsService.getLast().scope.userForm;
 		$scope.searchUser();
 	} else {
-		$scope.userForm = {	
+		$scope.userForm = {
 			currentPage : 1,
 			pageSize : 10,
-			orderByPath : "",
-			orderByDirection : ""
+			orderByPath : '',
+			orderByDirection : ''
 		};
 	}
 	
 	irajBreadcrumbsService.setLastLabel('Recherche d\'utilisateur');
-}
+});
