@@ -1,5 +1,7 @@
-var module = angular.module('blank-iraj', [
-		'$strap.directives',
+'use strict';
+
+angular.module('blank-iraj', [
+        'ngRoute',
 		'paginator',
 		'sortoncolumn',
 		'iraj-authentication-service',
@@ -7,8 +9,9 @@ var module = angular.module('blank-iraj', [
 		'iraj-message-interceptor',
 		'iraj-message-service',
 		'iraj-breadcrumbs-service',
-		'iraj-progress-interceptor'])
-	.config(router)
+		'iraj-progress-interceptor'
+	])
 	.config(function(irajProgressInterceptorProvider) {
 		irajProgressInterceptorProvider.setDefaultMessage('Chargement en cours...');
-	});
+	}
+);

@@ -7,11 +7,11 @@ angular.module('paginator', [])
 			restrict: 'A',
 			scope: {searchform : '@',
 					searchmethod : '@'},
-			templateUrl: "templates/directives/paginator.html",
+			templateUrl: 'templates/directives/paginator.html',
 			replace: true,
-			compile: function compile(tElement, tAttrs, transclude) {
+			compile: function compile() {
 				return {
-					pre: function preLink(scope, iElement, iAttrs, controller) {
+					pre: function preLink(scope) {
 						scope.pageSizeList = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 						scope.nbPageVisible = 5;
 						scope.numerosPage = [];
@@ -28,14 +28,14 @@ angular.module('paginator', [])
 									startIndex = scope.paginator.currentPage-2;
 								}
 				
-								var endIndex = scope.paginator.currentPage + 2;
+								endIndex = scope.paginator.currentPage + 2;
 				
 								if (endIndex > scope.paginator.nbPages){
 									endIndex = scope.paginator.nbPages;
 								}
 				
 								if (endIndex - startIndex < scope.nbPageVisible-1){
-									if (endIndex == scope.paginator.nbPages){
+									if (endIndex === scope.paginator.nbPages){
 										startIndex -= scope.nbPageVisible - (endIndex - startIndex) - 1;
 									}else{
 										endIndex += scope.nbPageVisible - (endIndex - startIndex) - 1;
@@ -49,13 +49,13 @@ angular.module('paginator', [])
 						};
 						
 						scope.paginator = {
-						pageSize: 10,
-						nbPages : 0,
+							pageSize: 10,
+							nbPages : 0,
 							currentPage : 1
 						};
 			
 						scope.goToPage = function(numPage){
-							if (scope.paginator.currentPage != numPage){
+							if (scope.paginator.currentPage !== numPage){
 								scope.paginator.currentPage = numPage;
 								
 								//On met à jour la valeur currentPage du form concerné et on lance la recherche.
@@ -64,9 +64,9 @@ angular.module('paginator', [])
 								
 								scope.majTabNumPage();
 							}
-						}
+						};
 						
-						scope.goToNextPage = function(){
+						scope.goToNextPage = function(numPage){
 							if (scope.paginator.currentPage + scope.nbPageVisible < scope.paginator.nbPages){
 								if (scope.paginator.currentPage < 3){
 									scope.paginator.currentPage = 2 + scope.nbPageVisible;
@@ -86,9 +86,9 @@ angular.module('paginator', [])
 							scope.$parent.$eval(scope.searchmethod);
 							
 							scope.majTabNumPage();
-						}
+						};
 						
-						scope.goToPreviousPage = function(numPage){
+						scope.goToPreviousPage = function(){
 							if (scope.paginator.currentPage - scope.nbPageVisible > 1){
 								if (scope.paginator.currentPage > scope.paginator.nbPages-2){
 									scope.paginator.currentPage =	scope.paginator.nbPages-2-scope.nbPageVisible;
@@ -103,7 +103,7 @@ angular.module('paginator', [])
 							scope.$parent.$eval(scope.searchform).currentPage = scope.paginator.currentPage;
 							scope.$parent.$eval(scope.searchmethod);
 							scope.majTabNumPage();
-						}
+						};
 						
 						scope.goToLastPage = function(){
 							scope.paginator.currentPage = scope.paginator.nbPages;
@@ -112,7 +112,7 @@ angular.module('paginator', [])
 							scope.$parent.$eval(scope.searchform).currentPage = scope.paginator.currentPage;
 							scope.$parent.$eval(scope.searchmethod);
 							scope.majTabNumPage();
-						}
+						};
 			
 						scope.goToFirstPage = function(){
 							scope.paginator.currentPage = 1;
@@ -121,7 +121,7 @@ angular.module('paginator', [])
 							scope.$parent.$eval(scope.searchform).currentPage = scope.paginator.currentPage;
 							scope.$parent.$eval(scope.searchmethod);
 							scope.majTabNumPage();
-						}
+						};
 						
 						scope.showNextButtons = function(){
 							if (scope.paginator.nbPages <= scope.nbPageVisible){
@@ -131,7 +131,7 @@ angular.module('paginator', [])
 								return true;
 							}
 							return false;
-						}
+						};
 						
 						scope.showPreviousButtons = function(){
 							if (scope.paginator.nbPages <= scope.nbPageVisible){
@@ -141,30 +141,30 @@ angular.module('paginator', [])
 								return true;
 							}
 							return false;
-						}
+						};
 						
-						scope.$watch('paginator.pageSize', function(newValue, oldValue) { 
-						if (newValue != oldValue) {
-							scope.$parent.$eval(scope.searchform).pageSize = newValue;
-							scope.goToFirstPage();
-						}
+						scope.$watch('paginator.pageSize', function(newValue, oldValue) {
+							if (newValue !== oldValue) {
+								scope.$parent.$eval(scope.searchform).pageSize = newValue;
+								scope.goToFirstPage();
+							}
 						});
 						
-						scope.$watch('paginator.nbPages', function(newValue, oldValue) { 
-							if (newValue != oldValue) {
-							scope.majTabNumPage();
+						scope.$watch('paginator.nbPages', function(newValue, oldValue) {
+							if (newValue !== oldValue) {
+								scope.majTabNumPage();
 							}
 						});
 			
 						// ---- Functions and properties available in parent scope -----
 			
 						scope.$parent.firstPage = function () {
-						scope.goToFirstPage();
+							scope.goToFirstPage();
 						};
 						
 						scope.$parent.paginator = scope.paginator;
 					},
-					post: function postLink(scope, iElement, iAttrs, controller) {}
+					post: function postLink() {}
 				};
 			}
 		};

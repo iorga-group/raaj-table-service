@@ -1,4 +1,7 @@
-function LoginCtrl($scope, $rootScope) {
+'use strict';
+
+angular.module('blank-iraj')
+.controller('LoginCtrl', function ($scope, $rootScope) {
 	$scope.tryLogin = function(login, password) {
 		var digestedPassword = CryptoJS.SHA1(login+'|'+password).toString(CryptoJS.enc.Hex);
 		$rootScope.$broadcast('iraj:auth-tryLogin' , login, digestedPassword);
@@ -11,5 +14,5 @@ function LoginCtrl($scope, $rootScope) {
 	});
 	$rootScope.$on('iraj:auth-loginSucced', function() {
 		$('#loginModal').modal('hide');
-	})
-}
+	});
+});

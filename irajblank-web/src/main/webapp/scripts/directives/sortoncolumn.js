@@ -8,19 +8,18 @@ angular.module('sortoncolumn', [])
 			scope: {searchform: '@',
 					searchmethod : '@',
 					column : '@sortoncolumn'},
-			template: 	"<a href='' ng-click='searchByColumn(\"asc\")'><i class=\"icon-arrow-up\"></i></a>" +
-						"<a href='' ng-click='searchByColumn(\"desc\")'><i class=\"icon-arrow-down\"></i></a>",
+			template: '<a href="" ng-click="searchByColumn(\'asc\')"><i class="icon-arrow-up"></i></a>' +	'<a href="" ng-click="searchByColumn(\'desc\')"><i class="icon-arrow-down"></i></a>',
 			replace: false,
-			compile: function compile(tElement, tAttrs, transclude) {
+			compile: function compile() {
 				return {
-					pre: function preLink(scope, iElement, iAttrs, controller) {
+					pre: function preLink(scope) {
 						scope.searchByColumn = function(directionParam){
 							scope.$parent.$eval(scope.searchform).orderByPath = scope.column;
 							scope.$parent.$eval(scope.searchform).orderByDirection = directionParam;
-						 			scope.$parent.$eval(scope.searchmethod);
-							}
+							scope.$parent.$eval(scope.searchmethod);
+						};
 					},
-					post: function postLink(scope, iElement, iAttrs, controller) {}
+					post: function postLink() {}
 				};
 			}
 		};

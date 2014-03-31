@@ -1,12 +1,18 @@
-<!doctype html>
+<!DOCTYPE html>
 <html xmlns:ng="http://angularjs.org" id="ng-app" ng-app="blank-iraj" >
 	<head>
+		<meta charset="utf-8">
+		<!-- build:css styles/vendor.css -->
 		<!-- bower:css -->
 		<link rel="stylesheet" href="lib/ng-table/ng-table.css" />
-		<link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.css" />
 		<!-- endbower -->
+		<!-- endbuild -->
+		
 		<link href="iraj/css/progress-interceptor.css" rel="stylesheet">
-		<link href="css/style.css" rel="stylesheet">
+		
+		<!-- build:css({.tmp,app}) styles/main.css -->
+		<link href="styles/style.css" rel="stylesheet">
+		<!-- endbuild -->
 	</head>
 	<body>
 		<div ng-include="'templates/includes/menu.html'"></div>
@@ -15,39 +21,62 @@
 		<div ng-include="'templates/includes/login.html'"></div>
 		<div class="container" ng-view></div>
 		
+		<!--[if lte IE 8]>
+			<script src="lib/es5-shim/es5-shim.min.js"></script>
+			<script src="lib/json3/lib/json3.min.js"></script>
+		<![endif]-->
+		
+		<!-- build:js scripts/vendor.js -->
 		<!-- bower:js -->
 		<script src="lib/jquery/dist/jquery.js"></script>
+		<script src="lib/es5-shim/es5-shim.js"></script>
 		<script src="lib/angular/angular.js"></script>
+		<script src="lib/angular-route/angular-route.js"></script>
+		<script src="lib/bootstrap-sass-official/vendor/assets/javascripts/bootstrap.js"></script>
 		<script src="lib/ng-table/ng-table.js"></script>
-		<script src="lib/bootstrap/dist/js/bootstrap.js"></script>
+		<script src="lib/cryptojslib/**/*.js"></script>
 		<!-- endbower -->
+		<script src="lib/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/affix.js"></script>
+		<script src="lib/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/alert.js"></script>
+		<script src="lib/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/button.js"></script>
+		<script src="lib/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/carousel.js"></script>
+		<script src="lib/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/transition.js"></script>
+		<script src="lib/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/collapse.js"></script>
+		<script src="lib/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/dropdown.js"></script>
+		<script src="lib/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/modal.js"></script>
+		<script src="lib/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/scrollspy.js"></script>
+		<script src="lib/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tab.js"></script>
+		<script src="lib/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tooltip.js"></script>
+		<script src="lib/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/popover.js"></script>
+		<!-- endbuild -->
 		
-		<script src="iraj/js/lib/md5.js"></script>
-		<script src="iraj/js/lib/hmac-sha1.js"></script>
-		<script src="iraj/js/lib/enc-base64-min.js"></script>
+		<!-- Librairies à conserver http://stackoverflow.com/questions/11064773/how-to-match-every-file-but-one-in-grunt-concat -->
+		<script src="lib/cryptojslib/rollups/md5.js"></script>
+		<script src="lib/cryptojslib/rollups/hmac-sha1.js"></script>
+		<script src="lib/cryptojslib/components/enc-base64-min.js"></script>
+		<!-- end -->
+		
 		<script src="iraj/js/security-utils.js"></script>
-		
-		<!--[if lte IE 8]>
-			<script src="public/js/lib/json3.min.js"></script>
-		<![endif]-->
-		<script src="js/lib/angular-strap.min.js"></script>
 		<script src="iraj/js/authentication-service.js"></script>
 		<script src="iraj/js/security-interceptor.js"></script>
 		<script src="iraj/js/message-service.js"></script>
 		<script src="iraj/js/message-interceptor.js"></script>
 		<script src="iraj/js/breadcrumbs-service.js"></script>
 		<script src="iraj/js/progress-interceptor.js"></script>
-		<script src="js/app/router.js"></script>
-		<script src="js/directives/paginator.js"></script>
-		<script src="js/directives/sortoncolumn.js"></script>
-		<script src="js/app/app.js"></script>
 		
+		<!-- build:js scripts/app.js -->
+		<script src="scripts/app/app.js"></script>
+		<script src="scripts/app/router.js"></script>
+		<script src="scripts/directives/paginator.js"></script>
+		<script src="scripts/directives/sortoncolumn.js"></script>
 		<!-- injector:js -->
-		<script charset="UTF-8" src="js/controllers/administration/userEditCtrl.js"></script>
-		<script charset="UTF-8" src="js/controllers/administration/userSearchCtrl.js"></script>
-		<script charset="UTF-8" src="js/controllers/homeCtrl.js"></script>
-		<script charset="UTF-8" src="js/controllers/includes/breadcrumbsCtrl.js"></script>
-		<script charset="UTF-8" src="js/controllers/includes/loginCtrl.js"></script>
-		<script charset="UTF-8" src="js/controllers/includes/menuCtrl.js"></script>
+		<script charset="UTF-8" src="scripts/controllers/administration/userEditCtrl.js"></script>
+		<script charset="UTF-8" src="scripts/controllers/administration/userSearchCtrl.js"></script>
+		<script charset="UTF-8" src="scripts/controllers/homeCtrl.js"></script>
+		<script charset="UTF-8" src="scripts/controllers/includes/breadcrumbsCtrl.js"></script>
+		<script charset="UTF-8" src="scripts/controllers/includes/loginCtrl.js"></script>
+		<script charset="UTF-8" src="scripts/controllers/includes/menuCtrl.js"></script>
 		<!-- endinjector -->
+		<!-- endbuild -->
 	</body>
+</html>

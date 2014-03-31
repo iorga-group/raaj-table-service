@@ -1,5 +1,5 @@
-<div ng-controller="BreadcrumbsCtrl" ng-show="breadcrumbs.length > 0">
-	<ul class="breadcrumbs">
+<div class="container" ng-controller="BreadcrumbsCtrl" ng-show="breadcrumbs.length > 0">
+	<ul class="breadcrumb">
 		<li ng-repeat="breadcrumb in breadcrumbs">
 			<span ng-switch="$last">
 				<span ng-switch-when="true"><a href="" class="current">{{breadcrumb.label}}</a></span>
