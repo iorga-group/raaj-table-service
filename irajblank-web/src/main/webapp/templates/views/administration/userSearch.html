@@ -1,4 +1,4 @@
-<form ng-submit="searchUser(true)">
+<form ng-submit="search()">
 	<fieldset>
 		<legend>Recherche d'utilisateur</legend>
 		<label>Nom</label>
@@ -16,25 +16,16 @@
 	</fieldset>
 </form>
 
-<div ng-show="users.length > 0">
+<div ng-show="count">
     <fieldset>
-    	<legend>Nombre d'utilisateurs : {{nbResults}}</legend>
-    
-	    <div paginator searchform="userForm" searchmethod="searchUser()"></div>
-	    
-	    <table class="table table-bordered table-condensed table-hover table-striped">
-	    	<thead>
-		        <tr>
-		            <th>Id </th>
-		            <th>First Name <span style="float:right" sortoncolumn="firstName" searchform="userForm" searchmethod="searchUser()"></span></th>
-		            <th>Last Name <span style="float:right" sortoncolumn="lastName" searchform="userForm" searchmethod="searchUser()"></span></th>
-		        </tr>
-		    </thead>
+    	<legend>Nombre d'utilisateurs : {{count}}</legend>
+    	
+	    <table ng-table="tableParams" class="table table-bordered table-condensed table-hover table-striped">
 		    <tbody>
-		    	<tr ng-repeat="user in users" ng-click="selectUser(user.userId)">
-		            <td>{{user.userId}}</td>
-		            <td>{{user.firstName}}</td>
-		            <td>{{user.lastName}}</td>
+		    	<tr ng-repeat="user in $data" ng-click="selectUser(user.userId)">
+		            <td data-title="'Id'" sortable="id">{{user.userId}}</td>
+		            <td data-title="'First Name'" sortable="firstName">{{user.firstName}}</td>
+		            <td data-title="'Last Name'" sortable="lastName">{{user.lastName}}</td>
 		        </tr>
 		    </tbody>
 	    </table>
