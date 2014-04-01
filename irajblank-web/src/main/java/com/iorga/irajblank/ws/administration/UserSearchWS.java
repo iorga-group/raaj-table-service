@@ -12,6 +12,7 @@ import javax.ws.rs.core.StreamingOutput;
 
 import com.iorga.iraj.annotation.ContextParam;
 import com.iorga.iraj.annotation.ContextParams;
+import com.iorga.iraj.annotation.ContextPath;
 import com.iorga.iraj.json.JsonWriter;
 import com.iorga.irajblank.model.entity.Profile;
 import com.iorga.irajblank.model.entity.User;
@@ -70,10 +71,17 @@ public class UserSearchWS {
 		Integer userId;
 		String lastName;
 		String firstName;
+		@ContextPath("profile.label")
+		String profileLabel;
 	}
 	@POST
 	@Path("/search")
 	public StreamingOutput search(final UserSearchRequest userSearchRequest) {
 		return jsonWriter.writeIterableWithTemplate(UserTemplate.class, userService.search(userSearchRequest));
+	}
+	@POST
+	@Path("/count")
+	public long count(final UserSearchRequest userSearchRequest) {
+		return userService.searchCount(userSearchRequest);
 	}
 }

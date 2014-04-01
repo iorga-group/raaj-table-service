@@ -92,7 +92,7 @@ public class UserService extends JPAEntityService<User, Integer> {
 
 	private final SearchQuery<User, QUser, UserSearchRequest> userSearchQuery = new SearchQuery<User, QUser, UserSearchRequest>() {
 		@Override
-		public void configureSearchQuery(QUser qUser, UserSearchRequest searchRequest, JPAQuery jpaQuery) {
+		public void configureSearchBaseQuery(QUser qUser, UserSearchRequest searchRequest, JPAQuery jpaQuery) {
 			jpaQuery.from(qUser);
 
 			if (searchRequest.getNom() != null){
@@ -105,12 +105,14 @@ public class UserService extends JPAEntityService<User, Integer> {
 				jpaQuery.where(qUser.lastName.containsIgnoreCase(searchRequest.getLogin()));
 			}
 		}
+		@Override
+		public void configureSearchQuery(QUser qUser, UserSearchRequest searchRequest, JPAQuery jpaQuery) {
+			jpaQuery.join(qUser.profile).fetch();
+		}
 	};
-
 	public long searchCount(final UserSearchRequest userSearchRequest) {
 		return userSearchQuery.searchCount(QUser.user, userSearchRequest, getEntityManager());
 	}
-
 	public List<User> search(final UserSearchRequest userSearchRequest) {
 		return userSearchQuery.search(QUser.user, userSearchRequest, userSearchRequest.getSearchScope(), getEntityManager());
 	}

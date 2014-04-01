@@ -5,32 +5,13 @@ angular.module('blank-iraj')
 	/// Action methods ///
 	/////////////////////
 	
-	/*
-	$scope.showUsers = function() {
-		$http.get('api/administration/userSearch/findAll').success(function(listUser, status, headers, config) {
-			$scope.users = listUser;
-		});
-	};
-	
-	$scope.searchUser = function(newSearch){		
-		if (newSearch){
-			$scope.userForm.currentPage = 1;
-		}
-		$http({
-		    url: 'api/administration/userSearch/search',
-		    method: "POST",
-		    data: $scope.userForm
-		})
-		.success(function(data, status, headers, config) {
-					$scope.users = data.listUser;
-					$scope.paginator.nbPages = data.nbPages;
-					$scope.nbResults = data.nbResults;
-				});
-	};*/
-	
-	$scope.search = function() {
+	$scope.search = function(goToPage1) {
 		$http.post('api/administration/userSearch/count', $scope.userForm).success(function (count) {
 			$scope.count = count;
+			if (goToPage1) {
+				$scope.tableParams.page(1);
+			}
+			irajTableService.reloadLazyLoadingTable($scope.tableParams, count);
 		});
 	};
 	
@@ -45,13 +26,7 @@ angular.module('blank-iraj')
 		$scope.profileList = data.profileList;
 	});
 	
-	irajTableService.initLazyLoadingTable('tableParams', 'count', $scope, function(tableParams, callbackFn) {
-		$scope.userForm.searchScope = {
-			currentPage: tableParams.page,
-			countPerPage: tableParams.count,
-			sorting: tableParams.sorting()
-		};
-		
+	irajTableService.initLazyLoadingTableWithSearchScope('tableParams', 'userForm.searchScope', $scope, function(tableParams, callbackFn) {
 		$http.post('api/administration/userSearch/search', $scope.userForm).success(function (results) {
 			callbackFn(results);
 		});
@@ -60,15 +35,11 @@ angular.module('blank-iraj')
 	// loading from last scope if necessary
 	if (irajBreadcrumbsService.shouldLoadFromLastScope()) {
 		$scope.userForm = irajBreadcrumbsService.getLast().scope.userForm;
-		$scope.searchUser();
+		$scope.tableParams = irajBreadcrumbsService.getLast().scope.tableParams;
+		$scope.search(false);
 	} else {
-		$scope.userForm = {
-			currentPage : 1,
-			pageSize : 10,
-			orderByPath : '',
-			orderByDirection : ''
-		};
+		$scope.userForm = {};
 	}
 	
-	irajBreadcrumbsService.setLastLabel('Recherche d\'utilisateur');
+	irajBreadcrumbsService.setLastLabel("Recherche d'utilisateur");
 });

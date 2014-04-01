@@ -17,9 +17,10 @@
 'use strict';
 
 angular.module('iraj-table-service', ['ngTable'])
-	.factory('irajTableService', function(ngTableParams, $filter, $parse) {
+	.factory('irajTableService', function(ngTableParams, $filter, $parse, $timeout) {
 		var irajTableService = {};
 		
+		/*
 		irajTableService.getDataFn = function(tableParamsName, dataExpression, scope) {
 			return function($defer, params) {
 				var data = scope.$eval(dataExpression);
@@ -70,20 +71,18 @@ angular.module('iraj-table-service', ['ngTable'])
 			}, {
 				getData: irajTableService.getDataFn(tableParamsName, dataExpression, scope)
 			}));
-			/*
-			scope.$watch(tableParamsName, function() {
-				irajTableService.sortTable(tableParamsName, dataExpression, orderedDataExpression, scope);
-			});
-			scope.$watch(dataExpression, function(data) {
-				if (data) {
-					var tableParams = scope.$eval(tableParamsName);
-					tableParams.total = data.length;
-					tableParams.page = 1;
-					irajTableService.sortTable(tableParamsName, dataExpression, orderedDataExpression, scope);
-				}
-			});
-			$parse(tableParamsName).assign(scope, new ngTableParams({count: displayedRowsCount ? displayedRowsCount : 25}));
-			*/
+//			scope.$watch(tableParamsName, function() {
+//				irajTableService.sortTable(tableParamsName, dataExpression, orderedDataExpression, scope);
+//			});
+//			scope.$watch(dataExpression, function(data) {
+//				if (data) {
+//					var tableParams = scope.$eval(tableParamsName);
+//					tableParams.total = data.length;
+//					tableParams.page = 1;
+//					irajTableService.sortTable(tableParamsName, dataExpression, orderedDataExpression, scope);
+//				}
+//			});
+//			$parse(tableParamsName).assign(scope, new ngTableParams({count: displayedRowsCount ? displayedRowsCount : 25}));
 		}
 
 		irajTableService.getDataFn = function(tableParamsName, dataExpression, scope) {
@@ -99,26 +98,16 @@ angular.module('iraj-table-service', ['ngTable'])
 				));
 			}
 		}
+		*/
 		
-		irajTableService.initLazyLoadingTable = function(tableParamsName, countExpression, scope, loadFn) {
+		irajTableService.initLazyLoadingTable = function(tableParamsName, scope, loadFn) {
 			var tableParams;
 			
-			if (arguments == 5) {
-				// function(tableParamsName, countExpression, scope, tableParams, loadFn)
-				tableParams = arguments[3];
-				loadFn = arguments[4];
+			if (arguments.length == 4) {
+				// function(tableParamsName, scope, tableParams, loadFn)
+				tableParams = arguments[2];
+				loadFn = arguments[3];
 			}
-			
-			// watch count for change
-			var prevCount = null;
-			scope.$watch(countExpression, function(count) {
-				if (angular.isDefined(count) && count != prevCount) {
-					var tableParams = scope.$eval(tableParamsName);
-					tableParams.total = count;
-					tableParams.page = 1;
-					prevCount = count;
-				}
-			});
 			
 			var tableParamsP = $parse(tableParamsName);
 			if (angular.isDefined(tableParams)) {
@@ -129,17 +118,57 @@ angular.module('iraj-table-service', ['ngTable'])
 				// table params not defined yet, let's define a new one
 				tableParams = new ngTableParams({
 					page: 1,
-					count: 25
+					count: 25,
+					sorting: {}
 				});
 				tableParamsP.assign(scope, tableParams);
 			}
 			
 			// define the getData function which will call the given loadFn
-			tableParams.settings.getData = function(defer, params) {
-				loadFn(tableParams, function(data) {
-					defer.resolve(data);
-				});
+			tableParams.settings({getData: function(defer, params) {
+				if (tableParams.total()) {
+					loadFn(tableParams, function(data) {
+						defer.resolve(data);
+					});
+				}
+			}});
+		}
+		
+		irajTableService.reloadLazyLoadingTable = function(tableParams, count) {
+			tableParams.total(count);
+			tableParams.reload();
+		}
+		
+		irajTableService.initLazyLoadingTableWithSearchScope = function(tableParamsName, searchScopeName, scope, loadFn) {
+			var searchScopeLoadFn = function(tableParams, callbackFn) {
+				// sync tableParams variables to searchScope
+				var searchScope = {
+						currentPage: tableParams.page(),
+						countPerPage: tableParams.count(),
+						sorting: tableParams.sorting()
+					},
+					searchScopeVarP = $parse(searchScopeName),
+					searchScopeVar = searchScopeVarP(scope);
+				
+				if (angular.isDefined(searchScopeVar)) {
+					angular.extend(searchScopeVar, searchScope);
+				} else {
+					searchScopeVarP.assign(scope, searchScope);
+				}
+				loadFn(tableParams, callbackFn);
 			};
+			
+			var tableParams;
+			
+			if (arguments.length == 5) {
+				// function(tableParamsName, searchScopeName, scope, tableParams, loadFn)
+				tableParams = arguments[3];
+				loadFn = arguments[4];
+
+				irajTableService.initLazyLoadingTable(tableParamsName, scope, tableParams, searchScopeLoadFn);
+			} else {
+				irajTableService.initLazyLoadingTable(tableParamsName, scope, searchScopeLoadFn);
+			}
 		}
 		
 		return irajTableService;

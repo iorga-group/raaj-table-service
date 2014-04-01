@@ -1,4 +1,4 @@
-<form class="form-inline" ng-submit="search()">
+<form class="form-inline" ng-submit="search(true)">
 	<fieldset>
 		<legend>Recherche d'utilisateur</legend>
 		<label for="nom">Nom</label>
@@ -23,9 +23,18 @@
 	    <table ng-table="tableParams" class="table table-bordered table-condensed table-hover table-striped">
 		    <tbody>
 		    	<tr ng-repeat="user in $data" ng-click="selectUser(user.userId)">
-		            <td data-title="'Id'" sortable="id">{{user.userId}}</td>
-		            <td data-title="'First Name'" sortable="firstName">{{user.firstName}}</td>
-		            <td data-title="'Last Name'" sortable="lastName">{{user.lastName}}</td>
+		            <td data-title="'Id'" sortable="'userId'">
+		            	{{user.userId}}
+		            </td>
+		            <td data-title="'Prénom'" sortable="'firstName'">
+		            	{{user.firstName}}
+	            	</td>
+		            <td data-title="'Nom'" sortable="'lastName'">
+		            	{{user.lastName}}
+	            	</td>
+		            <td data-title="'Profil'" sortable="'profile.label'">
+		            	{{user.profileLabel}}
+	            	</td>
 		        </tr>
 		    </tbody>
 	    </table>

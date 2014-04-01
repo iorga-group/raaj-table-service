@@ -10,7 +10,9 @@ import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.path.EntityPathBase;
 
 public abstract class SearchQuery <E, B extends EntityPathBase<E>, R> {
-	public abstract void configureSearchQuery(B entityPathBase, R searchRequest, JPAQuery jpaQuery);
+	public abstract void configureSearchBaseQuery(B entityPathBase, R searchRequest, JPAQuery jpaQuery);
+	public void configureSearchCountQuery(B entityPathBase, R searchRequest, JPAQuery jpaQuery) {}
+	public void configureSearchQuery(B entityPathBase, R searchRequest, JPAQuery jpaQuery) {}
 
 	public class Builder {
 		private JPAQuery jpaQuery;
@@ -18,6 +20,18 @@ public abstract class SearchQuery <E, B extends EntityPathBase<E>, R> {
 
 		public Builder createJpaQuery(EntityManager entityManager) {
 			jpaQuery = SearchQuery.this.createJpaQuery(entityManager);
+			return this;
+		}
+
+		public Builder configureSearchBaseQuery(B entityPathBase, R searchRequest) {
+			this.entityPathBase = entityPathBase;
+			SearchQuery.this.configureSearchBaseQuery(entityPathBase, searchRequest, jpaQuery);
+			return this;
+		}
+
+		public Builder configureSearchCountQuery(B entityPathBase, R searchRequest) {
+			this.entityPathBase = entityPathBase;
+			SearchQuery.this.configureSearchCountQuery(entityPathBase, searchRequest, jpaQuery);
 			return this;
 		}
 
@@ -39,6 +53,7 @@ public abstract class SearchQuery <E, B extends EntityPathBase<E>, R> {
 
 	public List<E> search(B entityPathBase, R searchRequest, SearchScope searchScope, EntityManager entityManager) {
 		return createSearchBuilder(entityManager, entityPathBase, searchRequest)
+			.configureSearchQuery(entityPathBase, searchRequest)
 			.addOrderBysOffsetAndLimit(searchScope)
 			.getJpaQuery()
 			.list(entityPathBase);
@@ -46,6 +61,7 @@ public abstract class SearchQuery <E, B extends EntityPathBase<E>, R> {
 
 	public long searchCount(B entityPathBase, R searchRequest, EntityManager entityManager) {
 		return createSearchBuilder(entityManager, entityPathBase, searchRequest)
+			.configureSearchCountQuery(entityPathBase, searchRequest)
 			.getJpaQuery()
 			.count();
 	}
@@ -53,7 +69,7 @@ public abstract class SearchQuery <E, B extends EntityPathBase<E>, R> {
 	public Builder createSearchBuilder(EntityManager entityManager, B entityPathBase, R searchRequest) {
 		return new Builder()
 			.createJpaQuery(entityManager)
-			.configureSearchQuery(entityPathBase, searchRequest);
+			.configureSearchBaseQuery(entityPathBase, searchRequest);
 	}
 
 	protected JPAQuery createJpaQuery(EntityManager entityManager) {
