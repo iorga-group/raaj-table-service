@@ -37,6 +37,9 @@
   			"rollups/hmac-sha1.js",
   			"components/enc-base64-min.js"
   		]
+  	},
+  	"es5-shim": {
+  		"main": []
   	}
   }
 }
