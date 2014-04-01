@@ -100,7 +100,7 @@ module.exports = function (grunt) {
 			options: {
 				sassDir: 'src/main/scss',
 				cssDir: 'src/main/webapp/styles',
-				generatedImagesDir: '.tmp/images/generated',
+				generatedImagesDir: 'src/main/webapp/images/generated',
 				imagesDir: 'src/main/webapp/images',
 				javascriptsDir: 'src/main/webapp/scripts',
 				fontsDir: 'src/main/webapp/styles/fonts',
@@ -176,7 +176,7 @@ module.exports = function (grunt) {
 			},
 			local_dependencies: {
 				files: {
-					'src/main/webapp/index.html': ['src/main/webapp/scripts/controllers/**/*.js']
+					'src/main/webapp/index.html': ['src/main/webapp/styles/**/*.css', 'src/main/webapp/scripts/**/*.js']
 				}
 			}
 		},
@@ -214,7 +214,8 @@ module.exports = function (grunt) {
 		'bower',
 		'bowerInstall',
 		'injector',
-	    'concurrent:server'
+	    'concurrent:server',
+	    'watch'
 	]);
 
 	grunt.registerTask('build', [
