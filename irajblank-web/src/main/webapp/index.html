@@ -12,13 +12,13 @@
 		
 		<!-- build:css styles/main.css -->
 		<!-- injector:css -->
+		<link rel="stylesheet" href="styles/style.css">
 		<!-- endinjector -->
 		<!-- endbuild -->
 	</head>
 	<body>
 		<div ng-include="'templates/includes/menu.html'"></div>
 		<div ng-include="'templates/includes/header.html'"></div>
-		<div ng-include="'templates/includes/breadcrumbs.html'"></div>
 		<div ng-include="'templates/includes/login.html'"></div>
 		<div class="container" ng-view></div>
 		
@@ -61,11 +61,9 @@
 		<script src="iraj/js/table-service.js"></script>
 		
 		<!-- build:js scripts/app.js -->
-		<script src="scripts/app/app.js"></script>
-		<script src="scripts/app/router.js"></script>
-		<script src="scripts/directives/paginator.js"></script>
-		<script src="scripts/directives/sortoncolumn.js"></script>
 		<!-- injector:js -->
+		<script charset="UTF-8" src="scripts/app/app.js"></script>
+		<script charset="UTF-8" src="scripts/app/router.js"></script>
 		<script charset="UTF-8" src="scripts/controllers/administration/userEditCtrl.js"></script>
 		<script charset="UTF-8" src="scripts/controllers/administration/userSearchCtrl.js"></script>
 		<script charset="UTF-8" src="scripts/controllers/homeCtrl.js"></script>

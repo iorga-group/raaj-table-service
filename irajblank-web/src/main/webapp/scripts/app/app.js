@@ -2,8 +2,6 @@
 
 angular.module('blank-iraj', [
         'ngRoute',
-		'paginator',
-		'sortoncolumn',
 		'iraj-authentication-service',
 		'iraj-security-interceptor',
 		'iraj-message-interceptor',

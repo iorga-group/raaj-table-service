@@ -13,3 +13,10 @@ a {
 	background-color: #999999;
 	color: white;
 }
+
+table.table tr td a.selectFullLine {
+	// thanks to http://stackoverflow.com/a/1461009/535203
+	display:inline-block;
+	height:100%;
+	width:100%;
+}

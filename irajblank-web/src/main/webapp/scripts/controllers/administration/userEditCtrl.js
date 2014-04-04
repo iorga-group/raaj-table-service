@@ -1,15 +1,19 @@
 'use strict';
 
 angular.module('blank-iraj')
-.controller('UserEditCtrl', function ($scope, $routeParams, $http, irajMessageService, irajBreadcrumbsService) {
+.controller('UserEditCtrl', function ($scope, $http, $location, irajMessageService) {
 	/// Action methods ///
 	/////////////////////
 	$scope.save = function(){
 		$http.post('api/administration/userEdit/save', $scope.userEditForm, {irajMessagesIdPrefix: 'userEditForm', irajClearAllMessages: true})
 			.success(function(userId) {
-				$scope.userEditForm.userId = userId;
+				if (!$scope.userEditForm.userId) {
+					$scope.userEditForm.userId = userId;
+					$location
+						.search({userId: userId})
+						.replace();
+				}
 				irajMessageService.displayMessage({message: 'L\'utilisateur a bien été enregistré.', type: 'success'}, 'userEditForm');
-				irajBreadcrumbsService.replace('/administration/userEdit/'+userId, 'Modification d\'un utilisateur');
 			});
 	};
 
@@ -29,16 +33,13 @@ angular.module('blank-iraj')
 		active : false
 	};
 	
-	if ($routeParams.userId) {
-		$scope.userEditForm.userId = $routeParams.userId;
+	if (angular.isDefined($location.search().userId)) {
+		$scope.userEditForm.userId = $location.search().userId;
 	}
 	
 	if ($scope.userEditForm.userId !== 0) {
 		$http.get('api/administration/userEdit/find/' + $scope.userEditForm.userId).success(function(user) {
 			$scope.userEditForm = user;
 		});
-		irajBreadcrumbsService.setLastLabel('Modification d\'un utilisateur');
-	} else {
-		irajBreadcrumbsService.setLastLabel('Création d\'un utilisateur');
 	}
 });
