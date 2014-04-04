@@ -22,9 +22,9 @@
     	
 	    <table ng-table="tableParams" class="table table-bordered table-condensed table-hover table-striped">
 		    <tbody>
-		    	<tr ng-repeat="user in $data" ng-click="selectUser(user.userId)">
+		    	<tr ng-repeat="user in $data">
 		            <td data-title="'Id'" sortable="'userId'">
-		            	{{user.userId}}
+		            	<a ng-href="#/administration/userEdit?userId={{user.userId}}" class="selectFullLine">{{user.userId}}</a>
 		            </td>
 		            <td data-title="'Prénom'" sortable="'firstName'">
 		            	{{user.firstName}}
