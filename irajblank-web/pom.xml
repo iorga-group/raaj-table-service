@@ -134,22 +134,6 @@
 							</resources>
 						</configuration>
 					</execution>
-					<execution>
-						<id>copy-filtered-webapp</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>src/main/webapp</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/main/filtered-webapp</directory>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
 				</executions>
 			</plugin>
 			<plugin>
@@ -193,51 +177,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<configuration>
-					<buildcommands>
-						<buildcommand>org.eclipse.jdt.core.javabuilder</buildcommand>
-						<buildcommand>org.eclipse.wst.common.project.facet.core.builder</buildcommand>
-						<buildcommand>org.jboss.tools.cdi.core.cdibuilder</buildcommand>
-						<buildcommand>org.jboss.tools.jst.web.kb.kbbuilder</buildcommand>
-						<buildcommand>org.eclipse.wst.validation.validationbuilder</buildcommand>
-					</buildcommands>
-					<!-- <additionalConfig> <file> <name>.settings/org.maven.ide.eclipse.prefs</name> 
-						<content> <![CDATA[eclipse.preferences.version=1 fullBuildGoals=process-test-resources 
-						includeModules=false resolveWorkspaceProjects=true resourceFilterGoals=process-resources 
-						resources\:testResources skipCompilerPlugin=true version=1]]> </content> 
-						</file> </additionalConfig> -->
-					<additionalProjectFacets>
-						<jst.jsf>2.0</jst.jsf>
-					</additionalProjectFacets>
-					<additionalProjectnatures>
-						<projectnature>org.jboss.tools.cdi.core.cdinature</projectnature>
-						<projectnature>org.jboss.tools.jsf.jsfnature</projectnature>
-						<projectnature>org.jboss.tools.jst.web.kb.kbnature</projectnature>
-					</additionalProjectnatures>
-					<packaging>war</packaging>
-				</configuration>
-			</plugin>
-			<!-- 
-			<plugin>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-test-libs</id>
-						<phase>process-test-resources</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<includeScope>test</includeScope>
-							<outputDirectory>${project.build.directory}/test-libs</outputDirectory>
-							<stripVersion>true</stripVersion>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			 -->
 		</plugins>
 	</build>
 </project>

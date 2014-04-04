@@ -9,25 +9,25 @@ module.exports = function (grunt) {
 	grunt.initConfig({
 		watch: {
 			compass: {
-				files: ['src/main/scss/{,*/}*.{scss,sass}'],
-				tasks: ['compass:server', 'autoprefixer']
+				files: ['src/main/filtered-webapp/scss/{,*/}*.{scss,sass}'],
+				tasks: ['compass:server']
 			},
 			styles: {
 				files: ['src/main/webapp/styles/{,*/}*.css'],
-				tasks: ['copy:styles', 'autoprefixer']
+				tasks: ['autoprefixer']
 			},
 			js: {
-				files: ['src/main/webapp/scripts/**/{,*/}*.js'],
-				tasks: ['jshint:all']
+				files: ['src/main/filtered-webapp/scripts/**/{,*/}*.js'],
+				tasks: ['jshint:all','copy:js']
 			},
-			htmlpartial: {
-				files: ['src/main/webapp/templates/**/{,*/}*.html'],
-				tasks: ['htmlhint:partial']
+			htmltemplates: {
+				files: ['src/main/filtered-webapp/**/*.html'],
+				tasks: ['htmlhint:partial','copy:templates']
 			},
-			htmlfull: {
-				files: ['src/main/webapp/index.html'],
-				tasks: ['htmlhint:full']
-			},
+			htmlindex: {
+				files: ['src/main/filtered-webapp/index.html'],
+				tasks: ['htmlhint:full','copy:index','bowerInstall','injector']
+			}
 		},
 		// Adds vendor prefixes in CSS when needed
 		autoprefixer: {
@@ -39,14 +39,92 @@ module.exports = function (grunt) {
 				}]
 			}
 		},
-		// Uses JSHint code quality tool
-		jshint: {
+		// Install Bower dependencies
+		bower: {
+			install: {
+				options: {
+					bowerOptions: {
+						forceLatest: true
+					}
+				}
+			}
+		},
+		// Injects Bower dependencies directly in index.html
+		bowerInstall: {
+			target: {
+				src: [
+					'src/main/webapp/index.html'
+				]
+			}
+		},
+	    // Empties folders to start fresh
+	    clean: {
+	      dist: {
+	        files: [{
+	          dot: true,
+	          src: [
+	            '.tmp'
+	          ]
+	        }]
+	      },
+	      server: '.tmp'
+	    },
+		// Uses Compass
+		compass: {
 			options: {
-				jshintrc: '.jshintrc'
+				sassDir: 'src/main/filtered-webapp/scss',
+				cssDir: 'src/main/webapp/styles',
+				generatedImagesDir: 'src/main/webapp/images/generated',
+				imagesDir: 'src/main/filtered-webapp/images',
+				javascriptsDir: 'src/main/filtered-webapp/scripts',
+				fontsDir: 'src/main/filtered-webapp/fonts',
+				importPath: 'src/main/webapp/lib',
+				httpImagesPath: '/images',
+				httpGeneratedImagesPath: '/images/generated',
+				httpFontsPath: '/fonts',
+				relativeAssets: false
 			},
-			all: [
-				'src/main/webapp/scripts/**/{,*/}*.js'
-			]
+			dist: {},
+			server: {
+				options: {
+					debugInfo: true
+				}
+			}
+		},
+		// Runs multiple tasks asynchronously
+		concurrent: {
+			server: {
+				tasks: ['copy:index','copy:js','copy:templates','compass:server'],
+				options: {
+	                logConcurrentOutput: true
+	            }
+			},
+			dist: {
+				tasks: ['copy:index','copy:js','copy:templates','compass:dist'],
+				options: {
+	                logConcurrentOutput: true
+	            }
+			}
+		},
+		copy: {
+			index: {
+				expand: true,
+				cwd: 'src/main/filtered-webapp',
+				dest: 'src/main/webapp',
+				src: 'index.html'
+			},
+			templates: {
+				expand: true,
+				cwd: 'src/main/filtered-webapp/templates/',
+				dest: 'src/main/webapp/templates/',
+				src: ['**']
+			},
+			js: {
+				expand: true,
+				cwd: 'src/main/filtered-webapp/scripts/',
+				dest: 'src/main/webapp/scripts/',
+				src: ['**']
+			}
 		},
 		// Uses HTMLHint code quality tool
 		htmlhint: {
@@ -95,70 +173,6 @@ module.exports = function (grunt) {
 		        src: ['src/main/webapp/index.html']
 		    }
 		},
-		// Uses Compass
-		compass: {
-			options: {
-				sassDir: 'src/main/scss',
-				cssDir: 'src/main/webapp/styles',
-				generatedImagesDir: 'src/main/webapp/images/generated',
-				imagesDir: 'src/main/webapp/images',
-				javascriptsDir: 'src/main/webapp/scripts',
-				fontsDir: 'src/main/webapp/styles/fonts',
-				importPath: 'src/main/webapp/lib',
-				httpImagesPath: '/images',
-				httpGeneratedImagesPath: '/images/generated',
-				httpFontsPath: '/styles/fonts',
-				relativeAssets: false
-			},
-			dist: {},
-			server: {
-				options: {
-					debugInfo: true
-				}
-			}
-		},
-		// Cleans unnecessary files and folders
-	    clean: {
-	    	server: '.tmp'
-	    },
-		// Put files not handled in other tasks here
-		copy: {
-			styles: {
-				expand: true,
-				cwd: 'src/main/webapp/styles',
-				dest: '.tmp/styles/',
-				src: '{,*/}*.css'
-			}
-		},
-		// Runs multiple tasks asynchronously
-		concurrent: {
-			server: [
-				'compass:server',
-				'copy:styles'
-			],
-			dist: [
-				'compass:dist',
-				'copy:styles',
-			]
-		},
-		// Install Bower dependencies
-		bower: {
-			install: {
-				options: {
-					bowerOptions: {
-						forceLatest: true
-					}
-				}
-			}
-		},
-		// Injects Bower dependencies directly in index.html
-		bowerInstall: {
-			target: {
-				src: [
-					'src/main/webapp/index.html'
-				]
-			}
-		},
 		// Injects AngularJS files created in the scripts/controllers folder directly in index.html
 		injector: {
 			options: {
@@ -180,22 +194,14 @@ module.exports = function (grunt) {
 				}
 			}
 		},
-	    // Reads HTML for usemin blocks to enable smart builds that automatically
-	    // concat, minify and revision files. Creates configurations in memory so
-	    // additional tasks can operate on them
-		useminPrepare: {
-			html: ['src/main/webapp/*.html'],
+		// Uses JSHint code quality tool
+		jshint: {
 			options: {
-				dest: 'src/main/webapp/dist'
-			}
-		},
-		// Performs rewrites based on the useminPrepare configuration
-		usemin: {
-			html: ['src/main/webapp/{,*/}*.html'],
-			css: ['src/main/webapp/styles/{,*/}*.css'],
-			options: {
-				assetsDirs: ['src/main/webapp/dist']
-			}
+				jshintrc: '.jshintrc'
+			},
+			all: [
+				'src/main/filtered-webapp/scripts/**/{,*/}*.js'
+			]
 		},
 	    // Allow the use of non-minsafe AngularJS files. Automatically makes it
 	    // minsafe compatible so Uglify does not destroy the ng references
@@ -206,31 +212,53 @@ module.exports = function (grunt) {
 		        	src: 'src/main/webapp/scripts/**/*.js'
 		        }]
 	    	}
+	    },
+	    // Reads HTML for usemin blocks to enable smart builds that automatically
+	    // concat, minify and revision files. Creates configurations in memory so
+	    // additional tasks can operate on them
+		useminPrepare: {
+			html: 'src/main/webapp/index.html',
+			options: {
+				dest: 'src/main/webapp'
+			}
+		},
+		// Performs rewrites based on the useminPrepare configuration
+		usemin: {
+			html: ['src/main/webapp/{,*/}*.html'],
+			css: ['src/main/webapp/styles/{,*/}*.css'],
+			options: {
+				assetsDirs: ['src/main/webapp']
+			}
+		},
+	    // The following *-min tasks produce minified files in the dist folder
+	    cssmin: {
+	      options: {
+	        root: 'src/main/webapp'
+	      }
 	    }
 	});
 	
 	grunt.registerTask('serve', [
-		'clean:server',
 		'bower',
+	    'concurrent:server',
 		'bowerInstall',
 		'injector',
-	    'concurrent:server',
 	    'watch'
 	]);
 
 	grunt.registerTask('build', [
-	    'clean:server',
 	    'bower',
+	    'concurrent:dist',
 		'bowerInstall',
 		'injector',
 		'useminPrepare',
-		'concurrent:dist',
 		'autoprefixer',
 		'ngmin',
 		'concat',
 		'uglify',
-		//'copy:dist',
-		'usemin'
+		'cssmin',
+		'usemin',
+		'clean:dist'
 	]);
 
 	grunt.registerTask('default', [

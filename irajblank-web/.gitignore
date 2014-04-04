@@ -1,5 +1,8 @@
 /src/main/webapp/lib
+/src/main/webapp/index.html
+/src/main/webapp/scripts
+/src/main/webapp/styles
+/src/main/webapp/templates
 /src/main/webapp/dist
 /node_modules
 .sass-cache
-.tmp
