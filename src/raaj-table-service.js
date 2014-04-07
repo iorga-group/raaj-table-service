@@ -18,7 +18,7 @@
     'use strict';
 
     angular.module('raaj-table-service', ['ngTable'])
-        .factory('irajTableService', function(ngTableParams, $filter, $parse, $timeout) {
+        .factory('irajTableService', function(ngTableParams, $filter, $parse, $location, $route) {
             var irajTableService = {};
 
             /*
@@ -101,29 +101,29 @@
             }
             */
 
-            irajTableService.initLazyLoadingTable = function(tableParamsName, scope, loadFn) {
-                var tableParams;
+            irajTableService.createNewNgTableParams = function() {
+                return new ngTableParams({
+                    page: 1,
+                    count: 25,
+                    sorting: {}
+                });
+            };
 
-                if (arguments.length == 4) {
-                    // function(tableParamsName, scope, tableParams, loadFn)
-                    tableParams = arguments[2];
-                    loadFn = arguments[3];
-                }
+            irajTableService.getOrCreateTableParams = function(tableParamsName, scope) {
+                var tableParamsP = $parse(tableParamsName),
+                    tableParams = tableParamsP(scope);
 
-                var tableParamsP = $parse(tableParamsName);
-                if (angular.isDefined(tableParams)) {
-                    // assign the given tableParams if given
-                    tableParamsP.assign(scope, tableParams);
-                }
-                if (tableParamsP(scope) == null) {
+                if (angular.isUndefined(tableParams)) {
                     // table params not defined yet, let's define a new one
-                    tableParams = new ngTableParams({
-                        page: 1,
-                        count: 25,
-                        sorting: {}
-                    });
+                    tableParams = irajTableService.createNewNgTableParams();
                     tableParamsP.assign(scope, tableParams);
                 }
+
+                return tableParams;
+            }
+
+            irajTableService.initLazyLoadingTable = function(tableParamsName, scope, loadFn) {
+                var tableParams = irajTableService.getOrCreateTableParams(tableParamsName, scope);
 
                 // define the getData function which will call the given loadFn
                 tableParams.settings({getData: function(defer, params) {
@@ -133,19 +133,32 @@
                         });
                     }
                 }});
-            }
+            };
 
             irajTableService.reloadLazyLoadingTable = function(tableParams, count) {
-                tableParams.total(count);
-                tableParams.reload();
-            }
+                function reload(count) {
+                    tableParams.total(count);
+                    tableParams.reload();
+                }
+                if (angular.isUndefined(count)) {
+                    var countFn = tableParams.countFn;
+                    if (angular.isUndefined(countFn)) {
+                        throw 'Must define a countFn in the tableParams if not passing count param for reloadLazyLoadingTable';
+                    }
+                    countFn(tableParams, function(count) {
+                        reload(count);
+                    })
+                } else {
+                    reload(count);
+                }
+            };
 
             irajTableService.initLazyLoadingTableWithSearchScope = function(tableParamsName, searchScopeName, scope, loadFn) {
-                var searchScopeLoadFn = function(tableParams, callbackFn) {
+                irajTableService.initLazyLoadingTable(tableParamsName, scope, function(tableParams, callbackFn) {
                     // sync tableParams variables to searchScope
                     var searchScope = {
-                            currentPage: tableParams.page(),
                             countPerPage: tableParams.count(),
+                            currentPage: tableParams.page(),
                             sorting: tableParams.sorting()
                         },
                         searchScopeVarP = $parse(searchScopeName),
@@ -157,20 +170,49 @@
                         searchScopeVarP.assign(scope, searchScope);
                     }
                     loadFn(tableParams, callbackFn);
-                };
+                });
+            };
 
-                var tableParams;
+            /**
+             * The object corresponding to the given formName must contain a field "searchScope" which contains the searchScope.
+             * The object corresponding to the given formName will be remembered in the $location
+             */
+            irajTableService.initLazyLoadingTableWithSearchScopeAndHistory = function(tableParamsName, formName, scope, loadFn, countFn) {
+                var formValueStr = $location.search()[formName],
+                    searchScopeName = formName + ".searchScope",
+                    tableParams = irajTableService.getOrCreateTableParams(tableParamsName, scope),
+                    mustReload = angular.isDefined(formValueStr);
 
-                if (arguments.length == 5) {
-                    // function(tableParamsName, searchScopeName, scope, tableParams, loadFn)
-                    tableParams = arguments[3];
-                    loadFn = arguments[4];
+                if (mustReload) {
+                    scope[formName] = angular.fromJson(formValueStr);
+                    // set it to the tableParams
+                    var searchScopeVar = $parse(searchScopeName)(scope);
 
-                    irajTableService.initLazyLoadingTable(tableParamsName, scope, tableParams, searchScopeLoadFn);
-                } else {
-                    irajTableService.initLazyLoadingTable(tableParamsName, scope, searchScopeLoadFn);
+                    if (angular.isDefined(searchScopeVar)) {
+                        tableParams.count(searchScopeVar.countPerPage);
+                        tableParams.page(searchScopeVar.currentPage);
+                        tableParams.sorting(searchScopeVar.sorting);
+                    }
+                } else if (angular.isUndefined(scope[formName])){
+                    // formValue not in the URL & the form is not defined, let's set a new one.
+                    scope[formName] = {};
                 }
-            }
+                irajTableService.initLazyLoadingTableWithSearchScope(tableParamsName, searchScopeName, scope, function(tableParams, callbackFn) {
+                    var searchVar = {};
+                    searchVar[formName] = angular.toJson(scope[formName]);
+                    $location.search(searchVar);
+                    if (angular.isDefined($route.current.reloadOnSearch) && !$route.current.reloadOnSearch) {
+                        $location.replace();
+                    }
+                    loadFn(tableParams, callbackFn);
+                });
+
+                tableParams.countFn = countFn;
+
+                if (mustReload) {
+                    irajTableService.reloadLazyLoadingTable(tableParams);
+                }
+            };
 
             return irajTableService;
         })
