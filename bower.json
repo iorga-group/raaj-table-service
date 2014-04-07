@@ -1,0 +1,20 @@
+{
+  "name": "raaj-table-service",
+  "version": "1.2.0",
+  "homepage": "https://github.com/iorga-group/raaj-table-service",
+  "authors": [
+    "iORGA GROUP"
+  ],
+  "description": "Restless Architecture for AngularJS - Table Service",
+  "main": "./src/raaj-table-service.js",
+  "dependencies": {
+    "angular": "~1.2.15",
+    "ng-table": "~0.3.1"
+  },
+  "keywords": [
+    "raaj",
+    "table",
+    "restless"
+  ],
+  "license": "LGPLv3"
+}
